@@ -140,6 +140,7 @@ MonoBehaviour:
   baseSpeed: 5
   rebSpeed: 25
   deceleration: 0.01
+  acumulatedInput: 0
 --- !u!114 &-1901742424261925298
 MonoBehaviour:
   m_ObjectHideFlags: 0
