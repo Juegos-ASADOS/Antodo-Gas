@@ -136,8 +136,8 @@ PlayerSettings:
     Others: 1
   bundleVersion: 1.0
   preloadedAssets:
-  - {fileID: 11400000, guid: eafe62c77463a174d9ca832361105116, type: 2}
-  - {fileID: 11400000, guid: 48ebd0d4abd599d4796de148992cf965, type: 2}
+  - {fileID: 11400000, guid: 0fdac1cb0048a0e4c829f7555d52d605, type: 2}
+  - {fileID: 11400000, guid: d9c3a437c9df2b74a90d54709e72908f, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -156,7 +156,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.Juegos-ASADOS.AntodoGas
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -707,7 +708,7 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 0
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: 
   framebufferDepthMemorylessMode: 0
