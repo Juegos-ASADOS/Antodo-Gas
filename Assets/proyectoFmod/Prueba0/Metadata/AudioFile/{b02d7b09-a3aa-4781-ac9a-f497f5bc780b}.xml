@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{b02d7b09-a3aa-4781-ac9a-f497f5bc780b}">
+		<property name="assetPath">
+			<value>BULLYFINGER_bell_one_shot_s950_ringside_boxing_bell.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>6.4984999999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{e2ff2e9c-559a-4993-96ae-d3c1dff039d7}</destination>
+		</relationship>
+	</object>
+</objects>

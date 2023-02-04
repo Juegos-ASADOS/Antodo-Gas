@@ -80,3 +80,4 @@ crashlytics-build.properties
 Build/
 FMODStudioCache.asset
 FMODStudioCache.meta
+*.log
