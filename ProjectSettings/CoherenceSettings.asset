@@ -28,8 +28,8 @@ MonoBehaviour:
   recvFrequency: 60
   bakeMode: 0
   schemaBakeFolderGuid: 3b7227fbcf662fd48917486130a1c07c
-  runtimeSettingsGuid: ac13900e03792924a8b3c9d3cb2aa3de
-  prefabMapperGuid: 819d8b63b510c6c418cb3f39ec281b1a
+  runtimeSettingsGuid: ac36c797c927776498747fd64868ad22
+  prefabMapperGuid: 8c31c4a39e5835f4ebcdb3fc6f0debb1
   schemaBakeGenerateAsmdef: 0
   reportAnalytics: 1
   useToolkit: 1
