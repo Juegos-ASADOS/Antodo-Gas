@@ -137,11 +137,16 @@ PlayerSettings:
   bundleVersion: 1.0
   preloadedAssets:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   - {fileID: 11400000, guid: 85ee433c7e39cdf4d8ebdbdf17cfb25b, type: 2}
   - {fileID: 11400000, guid: 93cdd75c4a9ea864c903235bce1c5fab, type: 2}
 =======
   - {fileID: 11400000, guid: 71fb3876bb66521409beee6e30206f07, type: 2}
   - {fileID: 11400000, guid: 2bd3971c8e4cf1b4ca3fa412b172e910, type: 2}
+>>>>>>> Stashed changes
+=======
+  - {fileID: 11400000, guid: 1d8f77552ad9ff14eaaabf3826ab245e, type: 2}
+  - {fileID: 11400000, guid: b4a11e6bb2ef9074986b0918340037d3, type: 2}
 >>>>>>> Stashed changes
   metroInputSource: 0
   wsaTransparentSwapchain: 0
