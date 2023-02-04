@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SceneManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static SceneManager instanceScene;
+    public static GameManager instance;
     void Awake()
     {
-        if (instanceScene == null)
+        if (instance == null)
         {
-            instanceScene = this;
+            instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
         else
