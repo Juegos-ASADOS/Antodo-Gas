@@ -9,7 +9,6 @@ public class DemoCameraBezier : MonoBehaviour
     public PathCreator pathCreator;
     PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
-    public Camera cam;
 
     public float speed = 5;
     public float offset = 5;
@@ -29,19 +28,31 @@ public class DemoCameraBezier : MonoBehaviour
     private bool lerping = false;
     private float lerpStartTime = 0;
     bool colision = false;
-    float basePov;
     float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
 
     PhotonView view;
 
     public int acumulatedInput = 0; //Para las colisiones
+
+    //Camera Fov
+    public Camera cam;
+    float baseFOV;
+    public float fovSpeed = 20.0f;
+    private float targetFov;
+    int levelBoost;
+    float baseCamerapos;
+    public float offSetCamera;
+
     void Start()
     {
         if (pathCreator != null)
         {
             // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
             pathCreator.pathUpdated += OnPathChanged;
-            basePov = cam.fieldOfView;
+            baseFOV = cam.fieldOfView;
+            targetFov = baseFOV;
+            levelBoost = 0;
+            baseCamerapos = cam.transform.localPosition.z;
         }
         view = GetComponent<PhotonView>();
         if (!view.IsMine)
@@ -49,6 +60,8 @@ public class DemoCameraBezier : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(false);
         }
     }
+
+
 
 
     void normalMove()
@@ -80,8 +93,26 @@ public class DemoCameraBezier : MonoBehaviour
             //Debug.Log(speed);
             speed -= deceleration;
         }
+        else 
+            levelBoost = 0;
+    }
 
-        cam.fieldOfView = basePov + speed;
+    void changeFOVSpeed()
+    {
+        Debug.Log("LevelBoost: " + levelBoost);
+        if (levelBoost > 0)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
+        }
+        else
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV, 2f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
+        }
+        
     }
 
     void lerpingMove()
@@ -129,8 +160,6 @@ public class DemoCameraBezier : MonoBehaviour
             speed -= deceleration;
         }
 
-        cam.fieldOfView = basePov + speed;
-
         if (lerpStartTime <= 0)
         {
             lerping = false;
@@ -166,6 +195,8 @@ public class DemoCameraBezier : MonoBehaviour
                 normalMove();
             else
                 lerpingMove();
+
+            changeFOVSpeed();
         }
     }
 
@@ -230,6 +261,7 @@ public class DemoCameraBezier : MonoBehaviour
             {
                 Debug.Log("bufo");
                 speed = rebSpeed;
+                if(levelBoost<3)levelBoost++;
             }
             else if (reb != null) colision = false;
 
