@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
-using Photon.Pun;
 
 public class DemoCameraBezier : MonoBehaviour
 {
@@ -26,8 +25,6 @@ public class DemoCameraBezier : MonoBehaviour
     bool colision = false;
     float basePov;
     float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
-
-    PhotonView view;
     void Start()
     {
         if (pathCreator != null)
@@ -36,16 +33,11 @@ public class DemoCameraBezier : MonoBehaviour
             pathCreator.pathUpdated += OnPathChanged;
             basePov = cam.fieldOfView;
         }
-        view = GetComponent<PhotonView>();
-        if (!view.IsMine)
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-        }
     }
 
     void Update()
     {
-        if (view.IsMine && pathCreator != null)
+        if (pathCreator != null)
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
             if (Input.GetKey(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
@@ -90,44 +82,39 @@ public class DemoCameraBezier : MonoBehaviour
     // is as close as possible to its position on the old path
     void OnPathChanged()
     {
-        if (view.IsMine)
-            distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
+        distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (view.IsMine)
+        PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
+        Salida sal = other.GetComponent<Salida>();
+
+        Debug.Log("salto");
+        if (pincho != null)
         {
-            PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
-            Salida sal = other.GetComponent<Salida>();
+            if (pincho.derecha) lateralAcceleration = -pinchoPunch;
+            else lateralAcceleration = pinchoPunch;
 
-            if (pincho != null)
-            {
-                if (pincho.derecha) lateralAcceleration = -pinchoPunch;
-                else lateralAcceleration = pinchoPunch;
+            colision = true;
+        }
 
-                colision = true;
-            }
-
-            if (sal != null)
-            {
-                distanceTraveledBeforeExit = distanceTravelled;
-                jumpRoot = sal.GetComponentInParent<PathCreator>();
-            }
+        if (sal != null)
+        {
+            Debug.Log("te obligo a asaltar");
+            distanceTraveledBeforeExit = distanceTravelled;
+            jumpRoot = sal.GetComponentInParent<PathCreator>();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (view.IsMine)
-        {
-            rebufo reb = other.GetComponent<rebufo>();
+        rebufo reb = other.GetComponent<rebufo>();
 
-            if (reb != null && !colision)
-            {
-                speed = rebSpeed;
-            }
-            else if (reb != null) colision = false;
+        if (reb != null && !colision)
+        {
+            speed = rebSpeed;
         }
+        else if (reb != null) colision = false;
     }
 }
