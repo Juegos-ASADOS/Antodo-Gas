@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathCreator: {fileID: 5396564205691166290, guid: 5e8422b32379b184ba20c3d3d8ba7c5c, type: 3}
-  endOfPathInstruction: 0
+  endOfPathInstruction: 2
   cam: {fileID: 7735793012016384541}
   speed: 8
   offset: 2
@@ -142,6 +142,7 @@ MonoBehaviour:
   deceleration: 0.01
   aceleration: 0.2
   manejable: 1
+  stunTime: 0.5
   acumulatedInput: 0
 --- !u!114 &-1901742424261925298
 MonoBehaviour:

@@ -244,6 +244,7 @@ public class DemoCameraBezier : MonoBehaviour
                 if (pincho.derecha) lateralAcceleration = -pinchoPunch;
                 else lateralAcceleration = pinchoPunch;
 
+                speed = baseSpeed;
                 colision = true;
             }
 
