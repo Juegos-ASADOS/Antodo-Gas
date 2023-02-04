@@ -19,7 +19,8 @@ public class DemoCameraBezier : MonoBehaviour
     public float rebSpeed = 25;
     public float deceleration = 0.2f;
     public float aceleration = 0.2f;
-    public float maxAce = 0.2f;
+    public bool manejable = true;
+    public float stunTime = 0.5f;
 
     float distanceTravelled;
     float acumRot = 0;
@@ -29,8 +30,9 @@ public class DemoCameraBezier : MonoBehaviour
     private bool lerping = false;
     private float lerpStartTime = 0;
     bool colision = false;
+    bool stunned = false;
+    float timeStunned = 0;
     float basePov;
-    float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
 
     PhotonView view;
 
@@ -48,6 +50,8 @@ public class DemoCameraBezier : MonoBehaviour
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
+
+        if (!manejable) distanceTravelled = 50;
     }
 
 
@@ -58,10 +62,26 @@ public class DemoCameraBezier : MonoBehaviour
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot += 1; acumulatedInput++;
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot -= 1; acumulatedInput--;
+        if (manejable)
+        {
+            if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
+            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
 
-        acumRot -= Input.GetAxis("Horizontal");
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot++; acumulatedInput++;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot--; acumulatedInput--;
+
+            acumRot -= Input.GetAxis("Horizontal");
+
+            if (Input.GetKeyDown(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
+            {
+                pathCreator = jumpRoot;
+                distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
+                lerping = true;
+                lerpStartTime = 1;
+                jumpRoot = null;
+            }
+
+        }
 
         acumRot += lateralAcceleration;
         transform.Rotate(0, 0, acumRot);
@@ -80,6 +100,8 @@ public class DemoCameraBezier : MonoBehaviour
             //Debug.Log(speed);
             speed -= deceleration;
         }
+
+
 
         cam.fieldOfView = basePov + speed;
     }
@@ -146,26 +168,25 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (view.IsMine && pathCreator != null)
         {
-            //Debug.Log("hola!");
 
-            if (speed < maxAce && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
-            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
-            if (Input.GetKeyDown(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
-            {
-                Debug.Log("saltado!");
-                pathCreator = jumpRoot;
-                //OnPathChanged();
-                distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
-                lerping = true;
-                lerpStartTime = 1;
-
-                jumpRoot = null;
-            }
-
-            if (!lerping)
+            if (!lerping && !stunned)
                 normalMove();
-            else
+
+            if (Mathf.Abs(lateralAcceleration) > 0)
+            {
+                if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
+                else lateralAcceleration -= 0.1f;
+            }
+            else if (lerping)
                 lerpingMove();
+
+            if (stunned) timeStunned += Time.deltaTime;
+
+            if (timeStunned >= stunTime)
+            {
+                stunned = false;
+                timeStunned = 0;
+            }
         }
     }
 
@@ -173,7 +194,7 @@ public class DemoCameraBezier : MonoBehaviour
     // is as close as possible to its position on the old path
     void OnPathChanged()
     {
-        if(view.IsMine)
+        if (view.IsMine)
             distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
     }
 
@@ -203,7 +224,6 @@ public class DemoCameraBezier : MonoBehaviour
 
 
                 //a pelo pecho
-
 
                 //Debug.Log("saltado!");
                 //pathCreator = jumpRoot;
@@ -246,18 +266,22 @@ public class DemoCameraBezier : MonoBehaviour
     {
         DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
 
-        if (otherPlayer != null)
+        Debug.Log("Hola mi hermano");
+
+        if (otherPlayer != null && !stunned)
         {
             if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
             {
-                if (acumulatedInput > 0) lateralAcceleration -= 10;
-                else lateralAcceleration += 10;
+                if (acumulatedInput > 0) lateralAcceleration -= 3;
+                else lateralAcceleration += 3;
 
             }
             else
             {
-                if (acumulatedInput > 0) lateralAcceleration -= 50;
-                else lateralAcceleration += 50;
+                if (acumulatedInput > 0) lateralAcceleration -= 10;
+                else lateralAcceleration += 10;
+
+                stunned = true;
             }
 
 
