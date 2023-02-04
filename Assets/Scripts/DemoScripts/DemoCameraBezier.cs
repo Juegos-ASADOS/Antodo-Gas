@@ -32,8 +32,8 @@ public class DemoCameraBezier : MonoBehaviour
             transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
             transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-            if (Input.GetKey(KeyCode.D)) acumRot += 1;
-            if (Input.GetKey(KeyCode.A)) acumRot -= 1;
+            if (Input.GetKey(KeyCode.A)) acumRot += 1;
+            if (Input.GetKey(KeyCode.D)) acumRot -= 1;
 
             acumRot += lateralAcceleration;
             transform.Rotate(0, 0, acumRot);
