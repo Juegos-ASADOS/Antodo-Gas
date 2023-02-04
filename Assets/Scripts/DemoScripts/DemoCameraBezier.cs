@@ -6,6 +6,7 @@ using PathCreation;
 public class DemoCameraBezier : MonoBehaviour
 {
     public PathCreator pathCreator;
+    PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
     public Camera cam;
 
@@ -22,7 +23,8 @@ public class DemoCameraBezier : MonoBehaviour
     float lateralAcceleration = 0;
     
     bool colision = false;
-    float basePov; 
+    float basePov;
+    float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
     void Start()
     {
         if (pathCreator != null)
@@ -38,7 +40,12 @@ public class DemoCameraBezier : MonoBehaviour
         if (pathCreator != null)
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
-            //if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.JoystickButton0)) speed = baseSpeed;
+            if (Input.GetKey(KeyCode.Z) && jumpRoot != null)
+            {
+                pathCreator = jumpRoot;
+                distanceTravelled = distanceTravelled - distanceTraveledBeforeExit;
+                jumpRoot = null;
+            }
 
             distanceTravelled += speed * Time.deltaTime;
             transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
@@ -81,6 +88,7 @@ public class DemoCameraBezier : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
+        Salida sal = other.GetComponent<Salida>();
 
         if (pincho != null)
         {
@@ -88,6 +96,12 @@ public class DemoCameraBezier : MonoBehaviour
             else lateralAcceleration = pinchoPunch;
 
             colision = true;
+        }
+
+        if (sal != null)
+        {
+            distanceTraveledBeforeExit = distanceTravelled;
+            jumpRoot = sal.GetComponentInParent<PathCreator>();
         }
     }
 
