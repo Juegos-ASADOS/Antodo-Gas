@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{195fafe7-64ec-46f2-be4d-1c139497eaa1}">
+		<property name="assetPath">
+			<value>PMVO_Percussion_09.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.93750566893424037</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{17d6818b-2dcd-4a61-906a-33f23c863823}</destination>
+		</relationship>
+	</object>
+</objects>
