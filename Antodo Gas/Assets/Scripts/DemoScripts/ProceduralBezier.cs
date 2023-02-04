@@ -45,7 +45,6 @@ public class ProceduralBezier : MonoBehaviour
 
         BezierPath path = new BezierPath(pathPoints, false, PathSpace.xyz);
         path.FlipNormals = true;
-        path.no
         pathCreator.bezierPath = path;
     }
 }
