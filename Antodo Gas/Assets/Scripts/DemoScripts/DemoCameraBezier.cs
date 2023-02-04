@@ -251,6 +251,8 @@ public class DemoCameraBezier : MonoBehaviour
 
                 speed = baseSpeed;
                 colision = true;
+
+                GetComponent<ParticleSystem>().Play();//Homer homer homer homer homer homer homer bart lisa homer marge homer otto homer homer otto homer
             }
 
             if (sal != null)
