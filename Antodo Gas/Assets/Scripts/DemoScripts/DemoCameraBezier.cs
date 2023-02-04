@@ -9,7 +9,6 @@ public class DemoCameraBezier : MonoBehaviour
     public PathCreator pathCreator;
     PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
-    public Camera cam;
 
     public float speed = 5;
     public float offset = 5;
@@ -19,7 +18,8 @@ public class DemoCameraBezier : MonoBehaviour
     public float rebSpeed = 25;
     public float deceleration = 0.2f;
     public float aceleration = 0.2f;
-    public float maxAce = 0.2f;
+    public bool manejable = true;
+    public float stunTime = 0.5f;
 
     float distanceTravelled;
     float acumRot = 0;
@@ -29,26 +29,44 @@ public class DemoCameraBezier : MonoBehaviour
     private bool lerping = false;
     private float lerpStartTime = 0;
     bool colision = false;
+    bool stunned = false;
+    float timeStunned = 0;
     float basePov;
-    float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
 
     PhotonView view;
 
     public int acumulatedInput = 0; //Para las colisiones
+
+    //Camera Fov
+    public Camera cam;
+    float baseFOV;
+    public float fovSpeed = 20.0f;
+    private float targetFov;
+    int levelBoost;
+    float baseCamerapos;
+    public float offSetCamera;
+
     void Start()
     {
         if (pathCreator != null)
         {
             // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
             pathCreator.pathUpdated += OnPathChanged;
-            basePov = cam.fieldOfView;
+            baseFOV = cam.fieldOfView;
+            targetFov = baseFOV;
+            levelBoost = 0;
+            baseCamerapos = cam.transform.localPosition.z;
         }
         view = GetComponent<PhotonView>();
         if (!view.IsMine)
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
+
+        if (!manejable) distanceTravelled = 50;
     }
+
+
 
 
     void normalMove()
@@ -58,10 +76,34 @@ public class DemoCameraBezier : MonoBehaviour
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot += 1; acumulatedInput++;
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot -= 1; acumulatedInput--;
+        if (manejable && !stunned)
+        {
+            if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
+            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
 
-        acumRot -= Input.GetAxis("Horizontal");
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                acumRot++; 
+                acumulatedInput++;
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                acumRot--;
+                acumulatedInput--;
+            }
+
+            acumRot -= Input.GetAxis("Horizontal");
+
+            if (Input.GetKeyDown(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
+            {
+                pathCreator = jumpRoot;
+                distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
+                lerping = true;
+                lerpStartTime = 1;
+                jumpRoot = null;
+            }
+
+        }
 
         acumRot += lateralAcceleration;
         transform.Rotate(0, 0, acumRot);
@@ -80,8 +122,26 @@ public class DemoCameraBezier : MonoBehaviour
             //Debug.Log(speed);
             speed -= deceleration;
         }
+        else 
+            levelBoost = 0;
+    }
 
-        cam.fieldOfView = basePov + speed;
+    void changeFOVSpeed()
+    {
+        Debug.Log("LevelBoost: " + levelBoost);
+        if (levelBoost > 0)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
+        }
+        else
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV, 2f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
+        }
+        
     }
 
     void lerpingMove()
@@ -129,8 +189,6 @@ public class DemoCameraBezier : MonoBehaviour
             speed -= deceleration;
         }
 
-        cam.fieldOfView = basePov + speed;
-
         if (lerpStartTime <= 0)
         {
             lerping = false;
@@ -146,26 +204,20 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (view.IsMine && pathCreator != null)
         {
-            //Debug.Log("hola!");
-
-            if (speed < maxAce && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
-            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
-            if (Input.GetKeyDown(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
-            {
-                Debug.Log("saltado!");
-                pathCreator = jumpRoot;
-                //OnPathChanged();
-                distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
-                lerping = true;
-                lerpStartTime = 1;
-
-                jumpRoot = null;
-            }
 
             if (!lerping)
                 normalMove();
             else
                 lerpingMove();
+
+            changeFOVSpeed();
+            if (stunned) timeStunned += Time.deltaTime;
+
+            if (timeStunned >= stunTime)
+            {
+                stunned = false;
+                timeStunned = 0;
+            }
         }
     }
 
@@ -173,7 +225,7 @@ public class DemoCameraBezier : MonoBehaviour
     // is as close as possible to its position on the old path
     void OnPathChanged()
     {
-        if(view.IsMine)
+        if (view.IsMine)
             distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
     }
 
@@ -204,7 +256,6 @@ public class DemoCameraBezier : MonoBehaviour
 
                 //a pelo pecho
 
-
                 //Debug.Log("saltado!");
                 //pathCreator = jumpRoot;
                 //OnPathChanged();
@@ -230,6 +281,7 @@ public class DemoCameraBezier : MonoBehaviour
             {
                 Debug.Log("bufo");
                 speed = rebSpeed;
+                if(levelBoost<3)levelBoost++;
             }
             else if (reb != null) colision = false;
 
@@ -246,18 +298,23 @@ public class DemoCameraBezier : MonoBehaviour
     {
         DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
 
-        if (otherPlayer != null)
+        if (otherPlayer != null && !stunned)
         {
+            Debug.Log(acumulatedInput);
+            Debug.Log(otherPlayer.acumulatedInput);
+
             if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
             {
-                if (acumulatedInput > 0) lateralAcceleration -= 10;
-                else lateralAcceleration += 10;
+                if (acumulatedInput > 0) lateralAcceleration -= 3;
+                else lateralAcceleration += 3;
 
             }
             else
             {
-                if (acumulatedInput > 0) lateralAcceleration -= 50;
-                else lateralAcceleration += 50;
+                if (acumulatedInput > 0) lateralAcceleration -= 10;
+                else lateralAcceleration += 10;
+
+                stunned = true;
             }
 
 
