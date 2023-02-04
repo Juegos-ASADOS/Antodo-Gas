@@ -7,6 +7,8 @@ public class DemoCameraBezier : MonoBehaviour
 {
     public PathCreator pathCreator;
     public EndOfPathInstruction endOfPathInstruction;
+    public Camera cam;
+
     public float speed = 5;
     public float offset = 5;
     public float pinchoPunch = 200;
@@ -18,14 +20,16 @@ public class DemoCameraBezier : MonoBehaviour
     float distanceTravelled;
     float acumRot = 0;
     float lateralAcceleration = 0;
-
+    
     bool colision = false;
+    float basePov; 
     void Start()
     {
         if (pathCreator != null)
         {
             // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
             pathCreator.pathUpdated += OnPathChanged;
+            basePov = cam.fieldOfView;
         }
     }
 
@@ -62,6 +66,8 @@ public class DemoCameraBezier : MonoBehaviour
                 Debug.Log(speed);
                 speed -= deceleration;
             }
+
+            cam.fieldOfView = basePov + speed;
         }
     }
 
