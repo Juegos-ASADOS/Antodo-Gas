@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{44d510a0-752b-4518-915c-f3a119176e74}">
+		<property name="assetPath">
+			<value>SS_AL_perc_conga_moukou.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.85392290249433112</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{17d6818b-2dcd-4a61-906a-33f23c863823}</destination>
+		</relationship>
+	</object>
+</objects>
