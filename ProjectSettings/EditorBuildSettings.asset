@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Laura.unity
     guid: bdc05da358f074445bd08d814b4a34a1
+  - enabled: 1
+    path: Assets/Scenes/Online.unity
+    guid: d50144fb6d6d1e341954725f1a5007be
   m_configObjects:
     io.coherence.simulator.build.options: {fileID: 11400000, guid: e07d7ed42e452534089f619ce3e722ed, type: 2}
