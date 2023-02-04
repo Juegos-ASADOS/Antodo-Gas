@@ -7,20 +7,29 @@ public class DemoCameraBezier : MonoBehaviour
 {
     public PathCreator pathCreator;
     public EndOfPathInstruction endOfPathInstruction;
+    public Camera cam;
+
     public float speed = 5;
     public float offset = 5;
     public float pinchoPunch = 200;
+    public float acelSpeed = 15;
+    public float baseSpeed = 5;
+    public float rebSpeed = 25;
+    public float deceleration = 0.2f;
 
     float distanceTravelled;
     float acumRot = 0;
     float lateralAcceleration = 0;
-
+    
+    bool colision = false;
+    float basePov; 
     void Start()
     {
         if (pathCreator != null)
         {
             // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
             pathCreator.pathUpdated += OnPathChanged;
+            basePov = cam.fieldOfView;
         }
     }
 
@@ -28,21 +37,37 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (pathCreator != null)
         {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
+            //if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.JoystickButton0)) speed = baseSpeed;
+
             distanceTravelled += speed * Time.deltaTime;
             transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
             transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-            if (Input.GetKey(KeyCode.A)) acumRot += 1;
-            if (Input.GetKey(KeyCode.D)) acumRot -= 1;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot += 1;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot -= 1;
+
+            acumRot -= Input.GetAxis("Horizontal");
 
             acumRot += lateralAcceleration;
             transform.Rotate(0, 0, acumRot);
             transform.position = transform.position + transform.up * offset;
 
-            if (lateralAcceleration > 0)
-                lateralAcceleration -= 0.1f;
+            if (Mathf.Abs(lateralAcceleration) > 0)
+            {
+                if(lateralAcceleration < 0) lateralAcceleration += 0.1f;
+                else lateralAcceleration -= 0.1f;
+            }         
             else
                 lateralAcceleration = 0;
+
+            if (speed > baseSpeed)
+            {
+                Debug.Log(speed);
+                speed -= deceleration;
+            }
+
+            cam.fieldOfView = basePov + speed;
         }
     }
 
@@ -55,9 +80,25 @@ public class DemoCameraBezier : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<PinchoTrigger>() != null)
+        PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
+
+        if (pincho != null)
         {
-            lateralAcceleration = pinchoPunch;
+            if (pincho.derecha) lateralAcceleration = -pinchoPunch;
+            else lateralAcceleration = pinchoPunch;
+
+            colision = true;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        rebufo reb = other.GetComponent<rebufo>();
+
+        if (reb != null && !colision)
+        {
+            speed = rebSpeed;
+        }
+        else if (reb != null) colision = false;
     }
 }

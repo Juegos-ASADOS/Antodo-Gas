@@ -16,7 +16,7 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "f4f49612492c519f9801011e2850af4c7ee7bdd1";
+		public const string schemaId = "8b3cb0a37f973eee5af49a30f864b39078f86e0a";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;
@@ -119,9 +119,6 @@ namespace Coherence.Generated
 		public const uint InternalGenericFieldULong3 = 99;
 		public const uint InternalGenericFieldColor0 = 100;
 		public const uint InternalGenericFieldColor1 = 101;
-		public const uint InternalArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldPosition_LOD0 = 102;
-		public const uint InternalArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldOrientation_LOD0 = 103;
-		public const uint InternalArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_GenericScale_LOD0 = 104;
 		public const uint InternalAuthorityRequest = 0;
 		public const uint InternalAuthorityTransfer = 1;
 		public const uint InternalQuerySynced = 2;
@@ -232,9 +229,6 @@ namespace Coherence.Generated
 			{ 99, "GenericFieldULong3" },
 			{ 100, "GenericFieldColor0" },
 			{ 101, "GenericFieldColor1" },
-			{ 102, "ArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldPosition_LOD0" },
-			{ 103, "ArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldOrientation_LOD0" },
-			{ 104, "ArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_GenericScale_LOD0" },
 		};
 
 		public static string ComponentNameForTypeId(uint typeId)
@@ -460,12 +454,6 @@ namespace Coherence.Generated
 					return GenericFieldColor0.Deserialize(inProtocolStream);
 				case InternalGenericFieldColor1:
 					return GenericFieldColor1.Deserialize(inProtocolStream);
-				case InternalArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldPosition_LOD0:
-					return WorldPosition.DeserializeArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldPosition_LOD0(inProtocolStream);
-				case InternalArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldOrientation_LOD0:
-					return WorldOrientation.DeserializeArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_WorldOrientation_LOD0(inProtocolStream);
-				case InternalArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_GenericScale_LOD0:
-					return GenericScale.DeserializeArchetypeBichocubo_a60afc6680ffaba4f99a82d970f62c1f_GenericScale_LOD0(inProtocolStream);
 				default:
 					return (null, 0, 0);
 			}
