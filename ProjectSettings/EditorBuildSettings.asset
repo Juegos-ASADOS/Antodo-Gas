@@ -4,5 +4,9 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Online.unity
+    guid: 40f86a48a8324d14b8698b29533a2aa1
+  m_configObjects:
+    io.coherence.simulator.build.options: {fileID: 11400000, guid: f0132a204813ca341a662f9e28819539, type: 2}
