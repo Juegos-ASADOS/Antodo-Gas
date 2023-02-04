@@ -123,6 +123,23 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &184886637 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5682497144492854686, guid: e908b215087ed764c96b936233a2b429, type: 3}
+  m_PrefabInstance: {fileID: 4405470228539341957}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &184886639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184886637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25001411ec63ab841ab5c4d4aaca426b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &410576978
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,6 +536,8 @@ MonoBehaviour:
   pinchoPunch: 5
   acelSpeed: 15
   baseSpeed: 5
+  rebSpeed: 25
+  deceleration: 0.01
 --- !u!54 &919137692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -849,6 +868,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 235687540660092910, guid: e908b215087ed764c96b936233a2b429, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2383039419374828740, guid: e908b215087ed764c96b936233a2b429, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c56f6d0181eaf0840815bbe0b5ed2cd2, type: 2}
     - target: {fileID: 2406393053050175258, guid: e908b215087ed764c96b936233a2b429, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -857,6 +884,10 @@ PrefabInstance:
       propertyPath: derecha
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4405470228739767155, guid: e908b215087ed764c96b936233a2b429, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6b86b63a3a3c55e4a836d61f9b0f9203, type: 2}
     - target: {fileID: 4405470228739767158, guid: e908b215087ed764c96b936233a2b429, type: 3}
       propertyPath: m_Name
       value: Pincho
@@ -879,7 +910,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405470228739767165, guid: e908b215087ed764c96b936233a2b429, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.36
+      value: 7.21
       objectReference: {fileID: 0}
     - target: {fileID: 4405470228739767165, guid: e908b215087ed764c96b936233a2b429, type: 3}
       propertyPath: m_LocalPosition.z
@@ -916,6 +947,14 @@ PrefabInstance:
     - target: {fileID: 4662579241456612410, guid: e908b215087ed764c96b936233a2b429, type: 3}
       propertyPath: derecha
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095815142301029980, guid: e908b215087ed764c96b936233a2b429, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 4.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6095815142301029980, guid: e908b215087ed764c96b936233a2b429, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.191
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e908b215087ed764c96b936233a2b429, type: 3}

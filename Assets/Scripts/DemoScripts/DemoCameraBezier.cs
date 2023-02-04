@@ -12,11 +12,14 @@ public class DemoCameraBezier : MonoBehaviour
     public float pinchoPunch = 200;
     public float acelSpeed = 15;
     public float baseSpeed = 5;
+    public float rebSpeed = 25;
+    public float deceleration = 0.2f;
 
     float distanceTravelled;
     float acumRot = 0;
     float lateralAcceleration = 0;
 
+    bool colision = false;
     void Start()
     {
         if (pathCreator != null)
@@ -31,7 +34,7 @@ public class DemoCameraBezier : MonoBehaviour
         if (pathCreator != null)
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
-            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.JoystickButton0)) speed = baseSpeed;
+            //if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.JoystickButton0)) speed = baseSpeed;
 
             distanceTravelled += speed * Time.deltaTime;
             transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
@@ -53,6 +56,12 @@ public class DemoCameraBezier : MonoBehaviour
             }         
             else
                 lateralAcceleration = 0;
+
+            if (speed > baseSpeed)
+            {
+                Debug.Log(speed);
+                speed -= deceleration;
+            }
         }
     }
 
@@ -71,6 +80,19 @@ public class DemoCameraBezier : MonoBehaviour
         {
             if (pincho.derecha) lateralAcceleration = -pinchoPunch;
             else lateralAcceleration = pinchoPunch;
+
+            colision = true;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        rebufo reb = other.GetComponent<rebufo>();
+
+        if (reb != null && !colision)
+        {
+            speed = rebSpeed;
+        }
+        else if (reb != null) colision = false;
     }
 }
