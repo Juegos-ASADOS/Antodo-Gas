@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }  
+    public void changeScene(string name)
+    {
+        SceneManager.LoadScene(name);
     }
     // Start is called before the first frame update
     void Start()
