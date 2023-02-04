@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,7 +155,7 @@ MonoBehaviour:
       lodStepsActive: 1
     lodLevels:
     - distance: 0
-    archetypeName: Bichocubo_a29c2cd3f80912048949a27f2cb5a2ab
+    archetypeName: Bichocubo_ffe8ded82a68a1a46bcbb6262b23df49
     GeneratesArchetypeDefinition: 1
   InterpolationLocation: 1
   bakedScriptType: Coherence.Generated.CoherenceSyncBichocubo, Assembly-CSharp
@@ -184,7 +184,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   remoteVersionPrefabName: Bichocubo
-  PrefabGuid: a29c2cd3f80912048949a27f2cb5a2ab
+  PrefabGuid: ffe8ded82a68a1a46bcbb6262b23df49
   selectedSynchronizedPrefabOption: 2
   usingReflection: 0
   coherenceTag: 
