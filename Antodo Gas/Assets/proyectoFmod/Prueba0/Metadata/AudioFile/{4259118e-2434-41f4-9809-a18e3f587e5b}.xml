@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{4259118e-2434-41f4-9809-a18e3f587e5b}">
+		<property name="assetPath">
+			<value>TRAVIS_BARKER_percussion_one_shot_clappo.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.3072108843537415</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{e2ff2e9c-559a-4993-96ae-d3c1dff039d7}</destination>
+		</relationship>
+	</object>
+</objects>

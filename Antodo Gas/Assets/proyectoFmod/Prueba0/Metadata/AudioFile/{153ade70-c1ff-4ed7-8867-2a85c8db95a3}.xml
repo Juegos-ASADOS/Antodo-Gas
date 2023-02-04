@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{153ade70-c1ff-4ed7-8867-2a85c8db95a3}">
+		<property name="assetPath">
+			<value>onlymp3.to - NEON RIDER  Final Trailer--kzSgOYwbuM-192k-1655203789316.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>77.040000000000006</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{e2ff2e9c-559a-4993-96ae-d3c1dff039d7}</destination>
+		</relationship>
+	</object>
+</objects>
