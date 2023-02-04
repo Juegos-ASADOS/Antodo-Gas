@@ -18,6 +18,8 @@ public class DemoCameraBezier : MonoBehaviour
     public float baseSpeed = 5;
     public float rebSpeed = 25;
     public float deceleration = 0.2f;
+    public float aceleration = 0.2f;
+    public float maxAce = 0.2f;
 
     float distanceTravelled;
     float acumRot = 0;
@@ -49,7 +51,8 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (view.IsMine && pathCreator != null)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
+            if (speed < maxAce && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
+            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
             if (Input.GetKey(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
             {
                 pathCreator = jumpRoot;
