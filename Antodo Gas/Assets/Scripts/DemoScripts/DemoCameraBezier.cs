@@ -90,6 +90,7 @@ public class DemoCameraBezier : MonoBehaviour
         PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
         Salida sal = other.GetComponent<Salida>();
 
+        Debug.Log("salto");
         if (pincho != null)
         {
             if (pincho.derecha) lateralAcceleration = -pinchoPunch;
@@ -100,6 +101,7 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (sal != null)
         {
+            Debug.Log("te obligo a asaltar");
             distanceTraveledBeforeExit = distanceTravelled;
             jumpRoot = sal.GetComponentInParent<PathCreator>();
         }
