@@ -62,13 +62,21 @@ public class DemoCameraBezier : MonoBehaviour
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-        if (manejable)
+        if (manejable && !stunned)
         {
             if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
             if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot++; acumulatedInput++;
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot--; acumulatedInput--;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                acumRot++; 
+                acumulatedInput++;
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                acumRot--;
+                acumulatedInput--;
+            }
 
             acumRot -= Input.GetAxis("Horizontal");
 
@@ -100,8 +108,6 @@ public class DemoCameraBezier : MonoBehaviour
             //Debug.Log(speed);
             speed -= deceleration;
         }
-
-
 
         cam.fieldOfView = basePov + speed;
     }
@@ -169,15 +175,9 @@ public class DemoCameraBezier : MonoBehaviour
         if (view.IsMine && pathCreator != null)
         {
 
-            if (!lerping && !stunned)
+            if (!lerping)
                 normalMove();
-
-            if (Mathf.Abs(lateralAcceleration) > 0)
-            {
-                if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
-                else lateralAcceleration -= 0.1f;
-            }
-            else if (lerping)
+            else
                 lerpingMove();
 
             if (stunned) timeStunned += Time.deltaTime;
@@ -266,10 +266,11 @@ public class DemoCameraBezier : MonoBehaviour
     {
         DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
 
-        Debug.Log("Hola mi hermano");
-
         if (otherPlayer != null && !stunned)
         {
+            Debug.Log(acumulatedInput);
+            Debug.Log(otherPlayer.acumulatedInput);
+
             if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
             {
                 if (acumulatedInput > 0) lateralAcceleration -= 3;
