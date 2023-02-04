@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
+using Photon.Pun;
 
 public class DemoCameraBezier : MonoBehaviour
 {
     public PathCreator pathCreator;
     PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
-    public Camera cam;
 
     public float speed = 5;
     public float offset = 5;
@@ -17,64 +17,212 @@ public class DemoCameraBezier : MonoBehaviour
     public float baseSpeed = 5;
     public float rebSpeed = 25;
     public float deceleration = 0.2f;
+    public float aceleration = 0.2f;
+    public bool manejable = true;
+    public float stunTime = 0.5f;
 
     float distanceTravelled;
     float acumRot = 0;
     float lateralAcceleration = 0;
-    
+
+
+    private bool lerping = false;
+    private float lerpStartTime = 0;
     bool colision = false;
+    bool stunned = false;
+    float timeStunned = 0;
     float basePov;
-    float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
+
+    PhotonView view;
+
+    public int acumulatedInput = 0; //Para las colisiones
+
+    //Camera Fov
+    public Camera cam;
+    float baseFOV;
+    public float fovSpeed = 20.0f;
+    private float targetFov;
+    int levelBoost;
+    float baseCamerapos;
+    public float offSetCamera;
+
+    float totalDistanceTraveled; //Para controlar quien va primero en la carrera
+
     void Start()
     {
         if (pathCreator != null)
         {
             // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
             pathCreator.pathUpdated += OnPathChanged;
-            basePov = cam.fieldOfView;
+            baseFOV = cam.fieldOfView;
+            targetFov = baseFOV;
+            levelBoost = 0;
+            baseCamerapos = cam.transform.localPosition.z;
         }
+        view = GetComponent<PhotonView>();
+        if (!view.IsMine)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+        if (!manejable) distanceTravelled = 50;
+    }
+
+    void normalMove()
+    {
+
+        distanceTravelled += speed * Time.deltaTime;
+        transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
+        transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+
+        totalDistanceTraveled += distanceTravelled;
+
+        if (manejable && !stunned)
+        {
+            if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
+            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
+
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                acumRot++; 
+                acumulatedInput++;
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                acumRot--;
+                acumulatedInput--;
+            }
+
+            acumRot -= Input.GetAxis("Horizontal");
+
+            if (Input.GetKeyDown(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
+            {
+                pathCreator = jumpRoot;
+                distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
+                lerping = true;
+                lerpStartTime = 1;
+                jumpRoot = null;
+            }
+
+        }
+
+        acumRot += lateralAcceleration;
+        transform.Rotate(0, 0, acumRot);
+        transform.position = transform.position + transform.up * offset;
+
+        if (Mathf.Abs(lateralAcceleration) > 0)
+        {
+            if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
+            else lateralAcceleration -= 0.1f;
+        }
+        else
+            lateralAcceleration = 0;
+
+        if (speed > baseSpeed)
+        {
+            //Debug.Log(speed);
+            speed -= deceleration;
+        }
+        else 
+            levelBoost = 0;
+    }
+
+    void changeFOVSpeed()
+    {
+        Debug.Log("LevelBoost: " + levelBoost);
+        if (levelBoost > 0)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
+        }
+        else
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV, 2f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
+        }
+        
+    }
+
+    void lerpingMove()
+    {
+
+        distanceTravelled += speed * Time.deltaTime;
+        Vector3 final = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
+        Quaternion finRot = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+
+        totalDistanceTraveled += distanceTravelled;
+
+        if (Mathf.Abs(lateralAcceleration) > 0)
+        {
+            if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
+            else lateralAcceleration -= 0.1f;
+        }
+        else
+            lateralAcceleration = 0;
+
+
+        GameObject aux = new GameObject();
+        aux.transform.position = final;
+        aux.transform.rotation = finRot;
+
+
+        //Debug.Log(acumRot);
+        acumRot += lateralAcceleration;
+        aux.transform.Rotate(0, 0, acumRot);
+        //transform.Rotate(0, 0, acumRot);
+        transform.position = Vector3.Lerp(transform.position, aux.transform.position + aux.transform.up * offset, (1 - lerpStartTime));
+        transform.rotation = Quaternion.Lerp(transform.rotation, aux.transform.rotation, (1 - lerpStartTime));
+        //transform.position + transform.up * offset;
+
+
+        Destroy(aux);
+        if (Mathf.Abs(lateralAcceleration) > 0)
+        {
+            if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
+            else lateralAcceleration -= 0.1f;
+        }
+        else
+            lateralAcceleration = 0;
+
+        if (speed > baseSpeed)
+        {
+            //Debug.Log(speed);
+            speed -= deceleration;
+        }
+
+        if (lerpStartTime <= 0)
+        {
+            lerping = false;
+        }
+        else
+        {
+            lerpStartTime -= Time.deltaTime;
+        }
+
     }
 
     void Update()
     {
-        if (pathCreator != null)
+        if (view.IsMine && pathCreator != null)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
-            if (Input.GetKey(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
-            {
-                pathCreator = jumpRoot;
-                distanceTravelled = distanceTravelled - distanceTraveledBeforeExit;
-                jumpRoot = null;
-            }
 
-            distanceTravelled += speed * Time.deltaTime;
-            transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
-            transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
-
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot += 1;
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot -= 1;
-
-            acumRot -= Input.GetAxis("Horizontal");
-
-            acumRot += lateralAcceleration;
-            transform.Rotate(0, 0, acumRot);
-            transform.position = transform.position + transform.up * offset;
-
-            if (Mathf.Abs(lateralAcceleration) > 0)
-            {
-                if(lateralAcceleration < 0) lateralAcceleration += 0.1f;
-                else lateralAcceleration -= 0.1f;
-            }         
+            if (!lerping)
+                normalMove();
             else
-                lateralAcceleration = 0;
+                lerpingMove();
 
-            if (speed > baseSpeed)
+
+
+            changeFOVSpeed();
+            if (stunned) timeStunned += Time.deltaTime;
+
+            if (timeStunned >= stunTime)
             {
-                Debug.Log(speed);
-                speed -= deceleration;
+                stunned = false;
+                timeStunned = 0;
             }
-
-            cam.fieldOfView = basePov + speed;
         }
     }
 
@@ -82,37 +230,102 @@ public class DemoCameraBezier : MonoBehaviour
     // is as close as possible to its position on the old path
     void OnPathChanged()
     {
-        distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
+        if (view.IsMine)
+            distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
-        Salida sal = other.GetComponent<Salida>();
 
-        if (pincho != null)
+        //Debug.Log("hay un trigger");
+        if (view.IsMine)
         {
-            if (pincho.derecha) lateralAcceleration = -pinchoPunch;
-            else lateralAcceleration = pinchoPunch;
+            PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
+            Salida sal = other.GetComponent<Salida>();
 
-            colision = true;
-        }
+            Debug.Log("salto");
+            if (pincho != null)
+            {
+                if (pincho.derecha) lateralAcceleration = -pinchoPunch;
+                else lateralAcceleration = pinchoPunch;
 
-        if (sal != null)
-        {
-            distanceTraveledBeforeExit = distanceTravelled;
-            jumpRoot = sal.GetComponentInParent<PathCreator>();
+                speed = baseSpeed;
+                colision = true;
+            }
+
+            if (sal != null)
+            {
+                Debug.Log("te obligo a asaltar");
+                //distanceTraveledBeforeExit = distanceTravelled;
+                jumpRoot = sal.GetComponentInParent<PathCreator>();
+
+
+                //a pelo pecho
+
+                //Debug.Log("saltado!");
+                //pathCreator = jumpRoot;
+                //OnPathChanged();
+                ////distanceTravelled = distanceTravelled - distanceTraveledBeforeExit;
+                //lerping = true;
+                //lerpStartTime = 1;
+
+                //jumpRoot = null;
+
+
+
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        rebufo reb = other.GetComponent<rebufo>();
-
-        if (reb != null && !colision)
+        if (view.IsMine)
         {
-            speed = rebSpeed;
+            rebufo reb = other.GetComponent<rebufo>();
+
+            if (reb != null && !colision)
+            {
+                Debug.Log("bufo");
+                speed = rebSpeed;
+                if(levelBoost<3)levelBoost++;
+            }
+            else if (reb != null) colision = false;
+
+            Salida sal = other.GetComponent<Salida>();
+            if (sal != null)
+            {
+                jumpRoot = null;
+            }
+
         }
-        else if (reb != null) colision = false;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
+
+        if (otherPlayer != null && !stunned)
+        {
+            Debug.Log(acumulatedInput);
+            Debug.Log(otherPlayer.acumulatedInput);
+
+            if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
+            {
+                if (acumulatedInput > 0) lateralAcceleration -= 3;
+                else lateralAcceleration += 3;
+
+            }
+            else
+            {
+                if (acumulatedInput > 0) lateralAcceleration -= 10;
+                else lateralAcceleration += 10;
+
+                stunned = true;
+            }
+
+
+        }
+    }
+
+    public float getDistance() { return totalDistanceTraveled; } //Para que el gameManager los ordene en la carrera
 }
