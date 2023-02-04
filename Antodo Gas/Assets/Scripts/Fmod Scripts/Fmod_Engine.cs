@@ -22,6 +22,14 @@ public class Fmod_Engine : MonoBehaviour
         engineEvent1 = FMODUnity.RuntimeManager.CreateInstance(Engine1Path);
     }
 
+    public void playEngine()
+    {
+        engineEvent.start();
+        engineEvent1.start();
+        engineEvent.release();
+        engineEvent1.release();
+    }
+
     public void updateBoostMusic(int motorIntensityValue)
     {
         engineEvent.setParameterByName(MotorIntensity, motorIntensityValue);
