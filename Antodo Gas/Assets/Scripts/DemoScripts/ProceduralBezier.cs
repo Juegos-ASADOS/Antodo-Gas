@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
-using PathCreationEditor;
+//using PathCreationEditor;
 
 public class ProceduralBezier : MonoBehaviour
 {

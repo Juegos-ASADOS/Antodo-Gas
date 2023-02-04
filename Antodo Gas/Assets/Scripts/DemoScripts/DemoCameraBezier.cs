@@ -9,7 +9,6 @@ public class DemoCameraBezier : MonoBehaviour
     public PathCreator pathCreator;
     PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
-    public Camera cam;
 
     public float speed = 5;
     public float offset = 5;
@@ -37,13 +36,26 @@ public class DemoCameraBezier : MonoBehaviour
     PhotonView view;
 
     public int acumulatedInput = 0; //Para las colisiones
+
+    //Camera Fov
+    public Camera cam;
+    float baseFOV;
+    public float fovSpeed = 20.0f;
+    private float targetFov;
+    int levelBoost;
+    float baseCamerapos;
+    public float offSetCamera;
+
     void Start()
     {
         if (pathCreator != null)
         {
             // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
             pathCreator.pathUpdated += OnPathChanged;
-            basePov = cam.fieldOfView;
+            baseFOV = cam.fieldOfView;
+            targetFov = baseFOV;
+            levelBoost = 0;
+            baseCamerapos = cam.transform.localPosition.z;
         }
         view = GetComponent<PhotonView>();
         if (!view.IsMine)
@@ -55,6 +67,8 @@ public class DemoCameraBezier : MonoBehaviour
     }
 
 
+
+
     void normalMove()
     {
 
@@ -62,13 +76,21 @@ public class DemoCameraBezier : MonoBehaviour
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-        if (manejable)
+        if (manejable && !stunned)
         {
             if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
             if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot++; acumulatedInput++;
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot--; acumulatedInput--;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                acumRot++; 
+                acumulatedInput++;
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                acumRot--;
+                acumulatedInput--;
+            }
 
             acumRot -= Input.GetAxis("Horizontal");
 
@@ -100,10 +122,26 @@ public class DemoCameraBezier : MonoBehaviour
             //Debug.Log(speed);
             speed -= deceleration;
         }
+        else 
+            levelBoost = 0;
+    }
 
-
-
-        cam.fieldOfView = basePov + speed;
+    void changeFOVSpeed()
+    {
+        Debug.Log("LevelBoost: " + levelBoost);
+        if (levelBoost > 0)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
+        }
+        else
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV, 2f * Time.deltaTime);
+            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
+        }
+        
     }
 
     void lerpingMove()
@@ -151,8 +189,6 @@ public class DemoCameraBezier : MonoBehaviour
             speed -= deceleration;
         }
 
-        cam.fieldOfView = basePov + speed;
-
         if (lerpStartTime <= 0)
         {
             lerping = false;
@@ -169,17 +205,12 @@ public class DemoCameraBezier : MonoBehaviour
         if (view.IsMine && pathCreator != null)
         {
 
-            if (!lerping && !stunned)
+            if (!lerping)
                 normalMove();
-
-            if (Mathf.Abs(lateralAcceleration) > 0)
-            {
-                if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
-                else lateralAcceleration -= 0.1f;
-            }
-            else if (lerping)
+            else
                 lerpingMove();
 
+            changeFOVSpeed();
             if (stunned) timeStunned += Time.deltaTime;
 
             if (timeStunned >= stunTime)
@@ -250,6 +281,7 @@ public class DemoCameraBezier : MonoBehaviour
             {
                 Debug.Log("bufo");
                 speed = rebSpeed;
+                if(levelBoost<3)levelBoost++;
             }
             else if (reb != null) colision = false;
 
@@ -266,10 +298,11 @@ public class DemoCameraBezier : MonoBehaviour
     {
         DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
 
-        Debug.Log("Hola mi hermano");
-
         if (otherPlayer != null && !stunned)
         {
+            Debug.Log(acumulatedInput);
+            Debug.Log(otherPlayer.acumulatedInput);
+
             if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
             {
                 if (acumulatedInput > 0) lateralAcceleration -= 3;
