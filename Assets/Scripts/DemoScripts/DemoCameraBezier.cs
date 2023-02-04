@@ -46,8 +46,11 @@ public class DemoCameraBezier : MonoBehaviour
             transform.Rotate(0, 0, acumRot);
             transform.position = transform.position + transform.up * offset;
 
-            if (lateralAcceleration > 0)
-                lateralAcceleration -= 0.1f;
+            if (Mathf.Abs(lateralAcceleration) > 0)
+            {
+                if(lateralAcceleration < 0) lateralAcceleration += 0.1f;
+                else lateralAcceleration -= 0.1f;
+            }         
             else
                 lateralAcceleration = 0;
         }
@@ -62,9 +65,12 @@ public class DemoCameraBezier : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<PinchoTrigger>() != null)
+        PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
+
+        if (pincho != null)
         {
-            lateralAcceleration = pinchoPunch;
+            if (pincho.derecha) lateralAcceleration = -pinchoPunch;
+            else lateralAcceleration = pinchoPunch;
         }
     }
 }

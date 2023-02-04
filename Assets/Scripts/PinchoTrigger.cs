@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PinchoTrigger : MonoBehaviour
 {
+    public bool derecha = false;
     // Start is called before the first frame update
     void Start()
     {
