@@ -22,13 +22,14 @@ public class DemoCameraBezier : MonoBehaviour
     float distanceTravelled;
     float acumRot = 0;
     float lateralAcceleration = 0;
-    
+
     bool colision = false;
     float basePov;
     float distanceTraveledBeforeExit = 0;   //Para saber en que momento salto de raiz
-    
+
     PhotonView view;
 
+    public int acumulatedInput = 0; //Para las colisiones
     void Start()
     {
         if (pathCreator != null)
@@ -60,8 +61,8 @@ public class DemoCameraBezier : MonoBehaviour
             transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
             transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot += 1;
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot -= 1;
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) acumRot += 1; acumulatedInput++;
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) acumRot -= 1; acumulatedInput--;
 
             acumRot -= Input.GetAxis("Horizontal");
 
@@ -71,9 +72,9 @@ public class DemoCameraBezier : MonoBehaviour
 
             if (Mathf.Abs(lateralAcceleration) > 0)
             {
-                if(lateralAcceleration < 0) lateralAcceleration += 0.1f;
+                if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
                 else lateralAcceleration -= 0.1f;
-            }         
+            }
             else
                 lateralAcceleration = 0;
 
@@ -131,6 +132,27 @@ public class DemoCameraBezier : MonoBehaviour
                 speed = rebSpeed;
             }
             else if (reb != null) colision = false;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
+
+        if (otherPlayer != null)
+        {
+            if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
+            {
+                if (acumulatedInput > 0) lateralAcceleration -= 10;
+                else lateralAcceleration += 10;
+
+            }
+            else
+            {
+                if (acumulatedInput > 0) lateralAcceleration -= 50;
+                else lateralAcceleration += 50;
+            }
+
         }
     }
 }
