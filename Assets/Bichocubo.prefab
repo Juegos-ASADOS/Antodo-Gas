@@ -155,7 +155,7 @@ MonoBehaviour:
       lodStepsActive: 1
     lodLevels:
     - distance: 0
-    archetypeName: Bichocubo_ffe8ded82a68a1a46bcbb6262b23df49
+    archetypeName: Bichocubo_596bdcb5fba057d4e843ffd254d27a28
     GeneratesArchetypeDefinition: 1
   InterpolationLocation: 1
   bakedScriptType: Coherence.Generated.CoherenceSyncBichocubo, Assembly-CSharp
@@ -184,7 +184,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   remoteVersionPrefabName: Bichocubo
-  PrefabGuid: ffe8ded82a68a1a46bcbb6262b23df49
+  PrefabGuid: 596bdcb5fba057d4e843ffd254d27a28
   selectedSynchronizedPrefabOption: 2
   usingReflection: 0
   coherenceTag: 
