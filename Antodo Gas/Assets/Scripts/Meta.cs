@@ -24,7 +24,10 @@ public class Meta : MonoBehaviour
     {
         numPlayersFinished++;
         if (other.transform.GetChild(0).gameObject.activeSelf){
-            finalText.GetComponent<TextMeshProUGUI>().SetText(numPlayersFinished.ToString() + "º posición");
+            string text = "Winner";
+            if (numPlayersFinished != 1)
+                text = numPlayersFinished.ToString() + "º posición";
+            finalText.GetComponent<TextMeshProUGUI>().SetText(text);
             finalText.SetActive(true);
         }
         if (numPlayersFinished >= gm.getNumPlayersInCurrentLobby())
