@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    public void changeScene(string name)
+    public static void changeScene(string name)
     {
         SceneManager.LoadScene(name);
     }
