@@ -40,7 +40,7 @@ public class DemoCameraBezier : MonoBehaviour
         if (pathCreator != null)
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed = acelSpeed;
-            if (Input.GetKey(KeyCode.Z) && jumpRoot != null)
+            if (Input.GetKey(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
             {
                 pathCreator = jumpRoot;
                 distanceTravelled = distanceTravelled - distanceTraveledBeforeExit;
