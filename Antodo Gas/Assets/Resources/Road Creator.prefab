@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: b7d67d7d7ddb88542b23886a4b496c77, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -133,18 +133,9 @@ MonoBehaviour:
     _bezierPath:
       points:
       - {x: -3.2247634, y: 0.8263334, z: 2.3792875}
-      - {x: -1.283143, y: 0.23846622, z: 3.1646647}
-      - {x: 0.6584772, y: -0.34940097, z: 3.950042}
-      - {x: 2.3595712, y: -0.7624575, z: 2.901955}
-      - {x: 3.6594722, y: -1.0780971, z: 2.1010528}
-      - {x: 4.583452, y: -1.0509282, z: 0.2846942}
-      - {x: 4.092701, y: -1.0053874, z: -1.1944623}
-      - {x: 3.579156, y: -0.95773137, z: -2.7423213}
-      - {x: 1.7052363, y: -0.72001815, z: -3.5153677}
-      - {x: 0.08291578, y: -0.54737484, z: -3.5271394}
-      - {x: -1.112274, y: -0.42018574, z: -3.5358117}
-      - {x: -2.006318, y: -0.33657387, z: -2.6937559}
-      - {x: -2.900362, y: -0.252962, z: -1.8517001}
+      - {x: 2.5999994, y: 57.766624, z: -72.7946}
+      - {x: 14.249525, y: 171.64722, z: -223.1424}
+      - {x: 20.074287, y: 228.58751, z: -298.31628}
       isClosed: 0
       space: 0
       controlMode: 3
@@ -156,9 +147,6 @@ MonoBehaviour:
       perAnchorNormalsAngle:
       - 335.08722
       - 345.02103
-      - 327.71606
-      - 320.15445
-      - 320.15445
       globalNormalsAngle: 0
       flipNormals: 0
     vertexPathUpToDate: 1
@@ -199,5 +187,5 @@ MonoBehaviour:
   thickness: 1.5
   resolutionU: 10
   resolutionV: 20
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: b7d67d7d7ddb88542b23886a4b496c77, type: 2}
   meshHolder: {fileID: 5396564205560394714}
