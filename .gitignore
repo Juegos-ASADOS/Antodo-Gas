@@ -81,12 +81,3 @@ Build/
 FMODStudioCache.asset
 FMODStudioCache.meta
 *.log
-
-#Unuseful FMOD libraries
-/[Aa]ssets/Plugins/FMOD/platforms/linux/
-/[Aa]ssets/Plugins/FMOD/platforms/mac/
-/[Aa]ssets/Plugins/FMOD/platforms/tvos/
-/[Aa]ssets/Plugins/FMOD/platforms/html5/
-/[Aa]ssets/Plugins/FMOD/platforms/uwp/
-/[Aa]ssets/Plugins/FMOD/platforms/ios/
-/[Aa]ssets/Plugins/FMOD/platforms/android/
