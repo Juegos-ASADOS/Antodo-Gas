@@ -46,6 +46,8 @@ public class DemoCameraBezier : MonoBehaviour
     float baseCamerapos;
     public float offSetCamera;
 
+    float totalDistanceTraveled; //Para controlar quien va primero en la carrera
+
     void Start()
     {
         if (pathCreator != null)
@@ -66,15 +68,14 @@ public class DemoCameraBezier : MonoBehaviour
         if (!manejable) distanceTravelled = 50;
     }
 
-
-
-
     void normalMove()
     {
 
         distanceTravelled += speed * Time.deltaTime;
         transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+
+        totalDistanceTraveled += distanceTravelled;
 
         if (manejable && !stunned)
         {
@@ -151,6 +152,8 @@ public class DemoCameraBezier : MonoBehaviour
         Vector3 final = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         Quaternion finRot = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
 
+        totalDistanceTraveled += distanceTravelled;
+
         if (Mathf.Abs(lateralAcceleration) > 0)
         {
             if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
@@ -210,6 +213,8 @@ public class DemoCameraBezier : MonoBehaviour
             else
                 lerpingMove();
 
+
+
             changeFOVSpeed();
             if (stunned) timeStunned += Time.deltaTime;
 
@@ -244,6 +249,7 @@ public class DemoCameraBezier : MonoBehaviour
                 if (pincho.derecha) lateralAcceleration = -pinchoPunch;
                 else lateralAcceleration = pinchoPunch;
 
+                speed = baseSpeed;
                 colision = true;
             }
 
@@ -320,4 +326,6 @@ public class DemoCameraBezier : MonoBehaviour
 
         }
     }
+
+    public float getDistance() { return totalDistanceTraveled; } //Para que el gameManager los ordene en la carrera
 }

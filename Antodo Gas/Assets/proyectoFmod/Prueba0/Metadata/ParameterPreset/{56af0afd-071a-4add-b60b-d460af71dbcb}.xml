@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{56af0afd-071a-4add-b60b-d460af71dbcb}">
+		<property name="name">
+			<value>MotorIntensity</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67c86084-bd0a-496e-a1b1-184d2785802e}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{4c0888db-dc02-4f62-886f-78bc6a8bed49}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{4c0888db-dc02-4f62-886f-78bc6a8bed49}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>
