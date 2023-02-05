@@ -26,6 +26,7 @@ public class DemoCameraBezier : MonoBehaviour
 
     float distanceTravelled;
     float acumRot = 0;
+    float rotVirage = 30;
     float lateralAcceleration = 0;
 
 
@@ -82,24 +83,24 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (manejable && !stunned)
         {
-            if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration;
-            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration;
+            if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration * Time.deltaTime;
+            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration * Time.deltaTime;
 
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
-                acumRot++; 
+                acumRot+= rotVirage * Time.deltaTime; 
                 acumulatedInput++;
             }
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                acumRot--;
+                acumRot-= rotVirage * Time.deltaTime;
                 acumulatedInput--;
             }
 
-            acumRot -= Input.GetAxis("Horizontal");
+            acumRot -= Input.GetAxis("Horizontal") * rotVirage * Time.deltaTime;
         }
 
-        acumRot += lateralAcceleration;
+        acumRot += lateralAcceleration * Time.deltaTime;
         transform.Rotate(0, 0, acumRot);
         transform.position = transform.position + transform.up * offset;
 
@@ -114,7 +115,7 @@ public class DemoCameraBezier : MonoBehaviour
         if (speed > baseSpeed)
         {
             //Debug.Log(speed);
-            speed -= deceleration;
+            speed -= deceleration * Time.deltaTime;
         }
         else 
             levelBoost = 0;
@@ -134,7 +135,7 @@ public class DemoCameraBezier : MonoBehaviour
             if (raycast.collider.GetComponentInParent<PathCreator>() != null && raycast.collider.GetComponentInParent<PathCreator>() != pathCreator)
             {
                 //punto de choque
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
                 {
                     jumpRoot = raycast.collider.gameObject.GetComponentInParent<PathCreator>();
                     //objeto spline al que vas a cambiar
@@ -207,7 +208,7 @@ public class DemoCameraBezier : MonoBehaviour
 
 
         //Debug.Log(acumRot);
-        acumRot += lateralAcceleration;
+        acumRot += lateralAcceleration * Time.deltaTime;
         //aux.transform.Rotate(0, 0, acumRot);
         ////transform.Rotate(0, 0, acumRot);
         //transform.rotation = Quaternion.Lerp(transform.rotation, aux.transform.rotation, timerLerp/cd_Lerp);
@@ -234,7 +235,7 @@ public class DemoCameraBezier : MonoBehaviour
         if (speed > baseSpeed)
         {
             //Debug.Log(speed);
-            speed -= deceleration;
+            speed -= deceleration * Time.deltaTime;
         }
 
     }
