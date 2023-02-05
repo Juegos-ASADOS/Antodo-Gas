@@ -26,7 +26,7 @@ public class CheckStart : MonoBehaviour
         if (view.IsMine && GameManager.instance.getRaceStarted())
         {
             Debug.Log("aaaaaaaaaafdjatdfj");
-            demoBez.setVel();
+            demoBez.startButton();
             this.enabled = false;
             return;
         }
