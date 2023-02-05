@@ -43,7 +43,6 @@ public class Meta : MonoBehaviour
         if (numPlayersFinished >= gm.getNumPlayersInCurrentLobby())
         {
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName("RaceEnded", 0);
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("RaceEnded", 0);
             GameManager.changeScene("EndGame");
         }
 
