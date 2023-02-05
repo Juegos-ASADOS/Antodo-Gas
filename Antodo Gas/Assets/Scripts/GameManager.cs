@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     Dictionary<string, int> playersInLobby = new Dictionary<string, int>();
 
+    bool host = false;
+
     string currentLobby;
     void Awake()
     {
@@ -23,6 +25,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+    public void setHost()
+    {
+        host = true;
+    }  
+    public bool getHost()
+    {
+        return host; 
     }
     public static void changeScene(string name)
     {
