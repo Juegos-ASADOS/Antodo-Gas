@@ -10,7 +10,7 @@ public class CountDownManager : MonoBehaviour
     [SerializeField]
     GameObject player;
     [SerializeField]
-    GameObject textWin, textFalse;
+    GameObject textWin, textFalse, time;
     [SerializeField]
     GameObject button;
 
@@ -22,6 +22,9 @@ public class CountDownManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        string result = string.Format("{0:0.00}", TIMETOBEAT);
+
+        time.GetComponent<Text>().text = result;
         if (TIMETOBEAT > 0.0f && !win)
         {
             TIMETOBEAT -= Time.deltaTime;
