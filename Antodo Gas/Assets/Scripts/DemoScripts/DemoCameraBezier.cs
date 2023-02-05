@@ -89,12 +89,6 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (view.IsMine && pathCreator != null)
         {
-
-            if (!lerping)
-                normalMove();
-            else
-                lerpingMove();
-
             //Debug
             if (Input.GetKeyDown(KeyCode.B))
             {
@@ -116,6 +110,33 @@ public class DemoCameraBezier : MonoBehaviour
                 stunned = false;
                 timeStunned = 0;
             }
+        }
+
+        if (Mathf.Abs(acumRot) > 360)
+        {
+            acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
+        }
+
+        CheckPathChange();
+
+
+
+        changeFOVSpeed();
+        if (stunned) timeStunned += Time.deltaTime;
+
+        if (timeStunned >= stunTime)
+        {
+            stunned = false;
+            timeStunned = 0;
+        }
+        if (!lerping)
+            normalMove();
+        else
+        {
+            timerLerp += Time.deltaTime;
+            lerpingMove();
+            if (timerLerp >= cd_Lerp)
+                lerping = false;
         }
     }
 
@@ -289,36 +310,6 @@ public class DemoCameraBezier : MonoBehaviour
             speed -= deceleration * Time.deltaTime;
         }
 
-    }
-
-    void update()
-    {
-        if (Mathf.Abs(acumRot) > 360)
-        {
-            acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
-        }
-
-        CheckPathChange();
-
-
-
-        changeFOVSpeed();
-        if (stunned) timeStunned += Time.deltaTime;
-
-        if (timeStunned >= stunTime)
-        {
-            stunned = false;
-            timeStunned = 0;
-        }
-        if (!lerping)
-            normalMove();
-        else
-        {
-            timerLerp += Time.deltaTime;
-            lerpingMove();
-            if (timerLerp >= cd_Lerp)
-                lerping = false;
-        }
     }
 
 
