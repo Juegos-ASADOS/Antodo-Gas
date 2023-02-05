@@ -17,7 +17,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
         //textBox.text = gmText;
         //if (gmText == "Creating Lobby...")
-        GameManager.instance.setHost();
+        GameManager.instance.setHost(true);
         PhotonNetwork.CreateRoom(createInput.text);
 
     }
@@ -28,7 +28,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
         //textBox.text = gmText;
         //if(gmText == "Connecting to lobby...")
-            PhotonNetwork.JoinRoom(joinInput.text);
+        GameManager.instance.setHost(false);
+        PhotonNetwork.JoinRoom(joinInput.text);
     }
 
     public override void OnJoinedRoom()
