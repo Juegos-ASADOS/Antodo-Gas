@@ -496,6 +496,28 @@ PrefabInstance:
     - {fileID: -1901742424261925298, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
     - {fileID: 8942843894450744724, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
+--- !u!1 &728060297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7735793012016384531, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
+  m_PrefabInstance: {fileID: 728060296}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &728060298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 728060297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab8353b5ebd32545867da143199a814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shakeTechnique: 0
+  _makeDefaultOnEnable: 1
+  _limitMagnitude: 0
+  _positionalMagnitudeLimit: 10
+  _rotationalMagnitudeLimit: 3
 --- !u!1 &876714842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1036,3 +1058,21 @@ MonoBehaviour:
   max: 30
   timer: 10
   accTime: 0
+--- !u!1 &2069434650 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7735793012005152626, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
+  m_PrefabInstance: {fileID: 728060296}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2069434652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069434650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 761bdf137e54c644d81a081442e75a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeData: {fileID: 11400000, guid: 2264ed217d1aeba4392ddbd12354b7e4, type: 2}

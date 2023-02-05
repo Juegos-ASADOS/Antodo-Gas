@@ -13,7 +13,7 @@ public class StartButton : MonoBehaviour
     }
     public void StartRace()
     {
-        demoBez.enabled = true;
+        demoBez.setVel();
         Destroy(this.gameObject);
     }
 }

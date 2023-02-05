@@ -9,11 +9,11 @@ using System;
 public class DemoCameraBezier : MonoBehaviour
 {
     public PathCreator pathCreator;
-    PathCreator jumpRoot;   //La raiz a la que puedo saltar
+    PathCreator jumpRoot;   //La raiz a la que puedo saltars
     public EndOfPathInstruction endOfPathInstruction;
     [SerializeField]
     GameObject spaceText;
-    public float speed = 5;
+    float speed = 0.0f;
     public float offset = 5;
     public float pinchoPunch = 200;
     public float acelSpeed = 15;
@@ -26,6 +26,8 @@ public class DemoCameraBezier : MonoBehaviour
     public float cd_Lerp = 0.5f;
     float timerLerp = 0.0f;
     public float rayCastRange = 8.0f;
+    public float timeAfterChange = 2.0f;
+    float changeTimer = float.MaxValue;
 
     float distanceTravelled;
     float acumRot = 0;
@@ -47,7 +49,8 @@ public class DemoCameraBezier : MonoBehaviour
     //Camera Fov
     public Camera cam;
     float baseFOV;
-    public float fovSpeed = 20.0f;
+    public float fovAcelSpeed = 30.0f;
+    public float fovSpeedBoost = 20.0f;
     private float targetFov;
     int levelBoost;
     float baseCamerapos;
@@ -82,12 +85,28 @@ public class DemoCameraBezier : MonoBehaviour
         cols = GetComponent<Fmod_Collisions>();
         eng = GetComponent<Fmod_Engine>();
     }
+    public void setVel()
+    {
+        speed = baseSpeed;
+    }
+    public float getVel()
+    {
+        return speed;
+    }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M)) raceStart();
+        if (!view.IsMine)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Debug.Log("Musica");
+            raceStart();
+        }
         if (Input.GetKeyDown(KeyCode.P)) eng.playEngine();
 
-        if (view.IsMine && pathCreator != null)
+
+        if (pathCreator != null)
         {
             //Debug
             if (Input.GetKeyDown(KeyCode.B))
@@ -154,12 +173,12 @@ public class DemoCameraBezier : MonoBehaviour
 
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
-                acumRot+= rotVirage * Time.deltaTime; 
+                acumRot += rotVirage * Time.deltaTime;
                 acumulatedInput++;
             }
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                acumRot-= rotVirage * Time.deltaTime;
+                acumRot -= rotVirage * Time.deltaTime;
                 acumulatedInput--;
             }
 
@@ -191,6 +210,15 @@ public class DemoCameraBezier : MonoBehaviour
 
     void CheckPathChange()
     {
+        if (changeTimer < timeAfterChange)
+        {
+            changeTimer += Time.deltaTime;
+            Debug.Log(changeTimer);
+            return;
+        }
+
+
+        //Debug.Log("Raycast");
         //raycast
         RaycastHit raycast;
         Ray ray = new Ray(transform.position, transform.up);
@@ -217,7 +245,7 @@ public class DemoCameraBezier : MonoBehaviour
 
                     ////TODO esto de la rotation no esta workeando;
                     float sum = acumRot % 360;
-                    acumRot += (sum < 0)?180:-180;
+                    acumRot += (sum < 0) ? 180 : -180;
                     //transform.Rotate(0, 0, acumRot);
                     //transform.position = transform.position + transform.up * (sampleToJump.scale.x);
                     //angulo, rotation
@@ -226,12 +254,15 @@ public class DemoCameraBezier : MonoBehaviour
                     //sampleToJump.location //centor de la curva
                     timerLerp = 0;
                     lerping = true;
+                    changeTimer = 0;
                 }
             }
-            /*else
-                spaceText.SetActive(false);*/
         }
-
+        else
+        {
+            spaceText.SetActive(false);
+            //Debug.Log("La vieja de lau");
+        }
         //punto de choque del raycast
 
 
@@ -242,13 +273,15 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (levelBoost > 0)
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV+fovAcelSpeed + fovSpeedBoost * levelBoost, 3f * Time.deltaTime);
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
                 new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
         }
         else
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV, 2f * Time.deltaTime);
+            float currentFov = baseFOV + (speed - baseSpeed) * (fovAcelSpeed / (acelSpeed - baseSpeed));
+            if (currentFov < baseFOV) currentFov = baseFOV;
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, currentFov, 5f * Time.deltaTime);
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
                 new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
         }
@@ -352,37 +385,37 @@ public class DemoCameraBezier : MonoBehaviour
             }
             else if (reb != null)
             {
-                colision = false; 
+                colision = false;
             }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
-        
-        if (otherPlayer != null && !stunned)
-        {
-            Debug.Log(acumulatedInput);
-            Debug.Log(otherPlayer.acumulatedInput);
-            cols.playCollision(0);
+        //DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
 
-            if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
-            {
-                if (acumulatedInput > 0) lateralAcceleration -= 3;
-                else lateralAcceleration += 3;
+        //if (otherPlayer != null && !stunned)
+        //{
+        //    Debug.Log(acumulatedInput);
+        //    Debug.Log(otherPlayer.acumulatedInput);
+        //    cols.playCollision(0);
 
-            }
-            else
-            {
-                if (acumulatedInput > 0) lateralAcceleration -= 10;
-                else lateralAcceleration += 10;
+        //    if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
+        //    {
+        //        if (acumulatedInput > 0) lateralAcceleration -= 3;
+        //        else lateralAcceleration += 3;
 
-                stunned = true;
-            }
+        //    }
+        //    else
+        //    {
+        //        if (acumulatedInput > 0) lateralAcceleration -= 10;
+        //        else lateralAcceleration += 10;
+
+        //        stunned = true;
+        //    }
 
 
-        }
+        //}
     }
 
     public float getDistance() { return totalDistanceTraveled; } //Para que el gameManager los ordene en la carrera
