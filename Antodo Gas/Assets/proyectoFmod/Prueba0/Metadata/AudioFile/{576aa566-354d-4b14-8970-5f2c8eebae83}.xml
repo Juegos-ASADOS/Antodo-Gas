@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{576aa566-354d-4b14-8970-5f2c8eebae83}">
 		<property name="assetPath">
-			<value>Unprocessed/Riser/impact.wav</value>
+			<value>SoundAssets/Riser/impact.wav</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>
