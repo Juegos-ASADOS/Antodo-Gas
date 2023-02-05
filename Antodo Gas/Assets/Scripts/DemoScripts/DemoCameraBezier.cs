@@ -11,7 +11,8 @@ public class DemoCameraBezier : MonoBehaviour
     public PathCreator pathCreator;
     PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
-
+    [SerializeField]
+    GameObject spaceText;
     public float speed = 5;
     public float offset = 5;
     public float pinchoPunch = 200;
@@ -180,9 +181,11 @@ public class DemoCameraBezier : MonoBehaviour
         {
             if (raycast.collider.GetComponentInParent<PathCreator>() != null && raycast.collider.GetComponentInParent<PathCreator>() != pathCreator)
             {
+                spaceText.SetActive(true);
                 //punto de choque
                 if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
                 {
+                    spaceText.SetActive(false);
                     jumpRoot = raycast.collider.gameObject.GetComponentInParent<PathCreator>();
                     //objeto spline al que vas a cambiar
                     distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
@@ -205,6 +208,8 @@ public class DemoCameraBezier : MonoBehaviour
                     lerping = true;
                 }
             }
+            /*else
+                spaceText.SetActive(false);*/
         }
 
         //punto de choque del raycast
