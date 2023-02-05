@@ -5411,18 +5411,19 @@ MonoBehaviour:
   offset: 4
   pinchoPunch: 5
   acelSpeed: 15
-  baseSpeed: 5
+  baseSpeed: 8
   rebSpeed: 25
-  deceleration: 0.3
-  aceleration: 2
+  deceleration: 1.5
+  aceleration: 4
   manejable: 1
   stunTime: 0.5
   cd_Lerp: 0.5
   rayCastRange: 8
+  rotVirage: 60
   acumulatedInput: 0
   cam: {fileID: 7735793012016384541}
-  fovSpeed: 20
-  offSetCamera: 0
+  fovSpeed: 12
+  offSetCamera: 0.08
 --- !u!114 &-1901742424261925298
 MonoBehaviour:
   m_ObjectHideFlags: 0
