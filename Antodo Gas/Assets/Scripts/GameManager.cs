@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Numerics;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,11 +12,14 @@ public class GameManager : MonoBehaviour
     const int maxPlayersInLobby = 4;
 
     Dictionary<string, int> playersInLobby = new Dictionary<string, int>();
-
+    List<GameObject> playerObjects = new List<GameObject>(maxPlayersInLobby);
+    int playerIndex;
     bool host = false;
     bool raceStarted = false;
 
     string currentLobby;
+
+    public bool isMultiplayer { get; set; }
     void Awake()
     {
         if (instance == null)
@@ -47,6 +52,12 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(name);
     }
+
+    public void setMultiplayer(bool state)
+    {
+        isMultiplayer = state;
+    }
+
     public string enterLobby(string key)
     {
         int numPlayers;
@@ -90,5 +101,34 @@ public class GameManager : MonoBehaviour
         int num;
         playersInLobby.TryGetValue(currentLobby, out num);
         return num;
+    }
+    public void addPlayer(GameObject cont)
+    {
+            Debug.Log("add");
+        if (cont.GetComponent<PhotonView>().IsMine)
+        {
+            playerIndex = playerObjects.Count;
+        }
+        playerObjects.Add(cont);
+    }
+    public int getPosition()
+    {
+        int pos = 0;
+        float myDistance = playerObjects[playerIndex].GetComponent<DemoCameraBezier>().getDistance();
+
+        for(int i = 0; i < playerObjects.Count; ++i)
+        {
+            if (i == playerIndex)
+                continue;
+
+            if (myDistance < playerObjects[i].GetComponent<DemoCameraBezier>().getDistance())
+                pos++;
+        }
+        return pos;
+    }
+
+    public List<GameObject> getPlayerObjects()
+    {
+        return playerObjects;
     }
 }

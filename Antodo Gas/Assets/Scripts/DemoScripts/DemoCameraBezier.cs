@@ -99,9 +99,12 @@ public class DemoCameraBezier : MonoBehaviour
         cameraStart(); //adelantar la camara
         //detachear la camara
         cam.transform.parent = null;
+
+        //if (!GameManager.instance.isMultiplayer)
+            startButton();
     }
 
-    void startButton()
+    public void startButton()
     {
         //comineza la cuneta atras, 2 segundos voy a decir.
         //cunado pasen los dos segundos la camara hacer el lerpeo a la posicion del jugador a la velocidad que tenga quedara guapo trusteen
@@ -134,8 +137,7 @@ public class DemoCameraBezier : MonoBehaviour
 
 
         //como no tengo boton pues con la x se hace el comienzo
-        if (Input.GetKeyDown(KeyCode.X) && !started)
-            startButton();
+        //if (Input.GetKeyDown(KeyCode.X) && !started)
 
         if (pathCreator != null)
         {

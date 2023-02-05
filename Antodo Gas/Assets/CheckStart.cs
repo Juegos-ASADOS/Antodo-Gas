@@ -22,19 +22,22 @@ public class CheckStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(view.IsMine + " " + GameManager.instance.getRaceStarted());
-        if (view.IsMine && GameManager.instance.getRaceStarted())
+        if (GameManager.instance.isMultiplayer)
         {
-            Debug.Log("aaaaaaaaaafdjatdfj");
-            demoBez.setVel();
-            this.enabled = false;
-            return;
-        }
+            Debug.Log(view.IsMine + " " + GameManager.instance.getRaceStarted());
+            if (view.IsMine && GameManager.instance.getRaceStarted())
+            {
+                Debug.Log("aaaaaaaaaafdjatdfj");
+                demoBez.setVel();
+                this.enabled = false;
+                return;
+            }
 
-        if (!view.IsMine && oriTransform != transform.position)
-        {
-            Debug.Log("soy el host");
-            GameManager.instance.setRaceStarted(true);
+            if (!view.IsMine && oriTransform != transform.position)
+            {
+                Debug.Log("soy el host");
+                GameManager.instance.setRaceStarted(true);
+            }
         }
        
     }
