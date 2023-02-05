@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1127699933499621163}
   - component: {fileID: 1127699933499621164}
   - component: {fileID: 1127699933499621165}
+  - component: {fileID: 1158481474513744069}
   m_Layer: 0
   m_Name: Meta
   m_TagString: Untagged
@@ -58,3 +59,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37dfe8a83edcdef438d9ace389d2167a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  finalText: {fileID: 0}
+--- !u!114 &1158481474513744069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127699933499621166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65317dc59a86599459754d298f1e019c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  metaSoundPath:
+    Guid:
+      Data1: -880616238
+      Data2: 1282834852
+      Data3: 1643316871
+      Data4: 179169141
+    Path: event:/WinRace
+  endRacePath:
+    Guid:
+      Data1: 1301792858
+      Data2: 1175687009
+      Data3: 868092560
+      Data4: 1130641699
+    Path: event:/EndRace

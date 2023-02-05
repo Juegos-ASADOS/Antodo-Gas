@@ -61,9 +61,10 @@ public class DemoCameraBezier : MonoBehaviour
 
     float totalDistanceTraveled; //Para controlar quien va primero en la carrera
 
-    Fmod_Music mus;
-    Fmod_Collisions cols;
-    Fmod_Engine eng;
+    Fmod_Music fmodMusicManager;
+    Fmod_Collisions fmodCollisionManager;
+    Fmod_Engine fmodEngineManager;
+    Fmod_RootChange fmodRootChangeManager;
 
 
     void cameraStart()
@@ -89,9 +90,10 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (!manejable) distanceTravelled = 50;
 
-        mus = GetComponent<Fmod_Music>();
-        cols = GetComponent<Fmod_Collisions>();
-        eng = GetComponent<Fmod_Engine>();
+        fmodMusicManager = GetComponent<Fmod_Music>();
+        fmodCollisionManager = GetComponent<Fmod_Collisions>();
+        fmodEngineManager = GetComponent<Fmod_Engine>();
+        fmodRootChangeManager = GetComponent<Fmod_RootChange>();
 
         normalMove(); //colcar al jugador y la camara en posicion
         cameraStart(); //adelantar la camara
@@ -102,7 +104,7 @@ public class DemoCameraBezier : MonoBehaviour
             startButton();
     }
 
-    void startButton()
+    public void startButton()
     {
         //comineza la cuneta atras, 2 segundos voy a decir.
         //cunado pasen los dos segundos la camara hacer el lerpeo a la posicion del jugador a la velocidad que tenga quedara guapo trusteen
@@ -131,7 +133,7 @@ public class DemoCameraBezier : MonoBehaviour
             Debug.Log("Musica");
             raceStart();
         }
-        if (Input.GetKeyDown(KeyCode.P)) eng.playEngine();
+        if (Input.GetKeyDown(KeyCode.P)) fmodEngineManager.playEngine();
 
 
         //como no tengo boton pues con la x se hace el comienzo
@@ -146,7 +148,7 @@ public class DemoCameraBezier : MonoBehaviour
             }
 
             CheckPathChange();
-            eng.updateBoostMusic((speed * 1) / rebSpeed);
+            fmodEngineManager.updateBoostMusic((speed * 1) / rebSpeed);
 
             changeFOVSpeed();
             if (stunned) timeStunned += Time.deltaTime;
@@ -199,14 +201,14 @@ public class DemoCameraBezier : MonoBehaviour
         else
             lateralAcceleration = 0;
 
-        if ( speed > acelSpeed)
+        if (speed > acelSpeed)
         {
             //Debug.Log(speed);
             speed -= deceleration * Time.deltaTime;
         }
         else
             if (timerBOST <= 0)
-                levelBoost = 0;
+            levelBoost = 0;
     }
 
 
@@ -257,6 +259,8 @@ public class DemoCameraBezier : MonoBehaviour
                     timerLerp = 0;
                     lerping = true;
                     changeTimer = 0;
+
+                    fmodRootChangeManager.playChangeRoot();
                 }
             }
         }
@@ -274,20 +278,20 @@ public class DemoCameraBezier : MonoBehaviour
     void changeFOVSpeed()
     {
         if (started && timer <= 0)
-        if (levelBoost > 0)
-        {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV+fovAcelSpeed + fovSpeedBoost * levelBoost, 3f * Time.deltaTime);
-            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
-                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
-        }
-        else
-        {
-            float currentFov = baseFOV + (speed - baseSpeed) * (fovAcelSpeed / (acelSpeed - baseSpeed));
-            if (currentFov < baseFOV) currentFov = baseFOV;
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, currentFov, 5f * Time.deltaTime);
-            cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
-                new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
-        }
+            if (levelBoost > 0)
+            {
+                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovAcelSpeed + fovSpeedBoost * levelBoost, 3f * Time.deltaTime);
+                cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                    new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
+            }
+            else
+            {
+                float currentFov = baseFOV + (speed - baseSpeed) * (fovAcelSpeed / (acelSpeed - baseSpeed));
+                if (currentFov < baseFOV) currentFov = baseFOV;
+                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, currentFov, 5f * Time.deltaTime);
+                cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
+                    new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
+            }
         else if (timer >= 0)
         {
             timer -= Time.deltaTime;
@@ -379,8 +383,8 @@ public class DemoCameraBezier : MonoBehaviour
                 colision = true;
 
                 GetComponentInChildren<ParticleSystem>().Play();
-                mus.resetBoostMusic();
-                cols.playCollision(1);
+                fmodMusicManager.resetBoostMusic();
+                fmodCollisionManager.playCollision(1);
             }
         }
     }
@@ -397,8 +401,8 @@ public class DemoCameraBezier : MonoBehaviour
                 speed = rebSpeed;
                 if (levelBoost < 3) levelBoost++;
 
-                mus.updateBoostMusic(1);
-                cols.playCollision(2);
+                fmodMusicManager.updateBoostMusic(1);
+                fmodCollisionManager.playCollision(2);
             }
             else if (reb != null)
             {
@@ -439,7 +443,7 @@ public class DemoCameraBezier : MonoBehaviour
 
     public void raceStart()
     {
-        mus.playMusic();
-        mus.updateStartedMusic(true);
+        fmodMusicManager.playMusic();
+        fmodMusicManager.updateStartedMusic(true);
     }
 }

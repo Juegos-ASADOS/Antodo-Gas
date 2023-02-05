@@ -6,12 +6,13 @@ using Photon.Pun;
 public class SpawnPlayers : MonoBehaviour
 {
     public GameObject playerPrefab;
+    public GameObject spawnPoint;
     [SerializeField]
     float x, y, z;
     // Start is called before the first frame update
     void Awake()
     {
-        PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(x,y,z), Quaternion.identity);
+        GameManager.instance.addPlayer(PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(x, y, z), Quaternion.identity));
     }
 
 }
