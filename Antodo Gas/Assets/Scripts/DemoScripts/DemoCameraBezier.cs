@@ -149,22 +149,12 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (manejable && !stunned)
         {
-            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0))) speed += aceleration * Time.deltaTime;
-            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1))) speed -= deceleration * Time.deltaTime;
+            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("ControllerTriggers")>0)) speed += aceleration * Time.deltaTime;
+            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("ControllerTriggers") < 0)) speed -= deceleration * Time.deltaTime;
 
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                acumRot += rotVirage * Time.deltaTime;
-                acumulatedInput++;
-            }
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            {
-                acumRot -= rotVirage * Time.deltaTime;
-                acumulatedInput--;
-            }
 
-            acumRot -= Input.GetAxis("Horizontal") * rotVirage * Time.deltaTime;
-            acumulatedInput -= (int)Input.GetAxis("Horizontal");
+            acumRot -= Input.GetAxisRaw("Horizontal") * rotVirage * Time.deltaTime;
+            acumulatedInput -= (int)Input.GetAxisRaw("Horizontal");
         }
 
         acumRot += lateralAcceleration;
@@ -212,7 +202,7 @@ public class DemoCameraBezier : MonoBehaviour
             {
                 spaceText.SetActive(true);
                 //punto de choque
-                if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
+                if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button0)))
                 {
                     spaceText.SetActive(false);
                     jumpRoot = raycast.collider.gameObject.GetComponentInParent<PathCreator>();
