@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{16138097-fd45-4378-908e-0e1592df2e1b}">
+		<property name="name">
+			<value>RaceEnded</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67c86084-bd0a-496e-a1b1-184d2785802e}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{11da653d-82da-4fc6-999d-d800bad87155}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{11da653d-82da-4fc6-999d-d800bad87155}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
