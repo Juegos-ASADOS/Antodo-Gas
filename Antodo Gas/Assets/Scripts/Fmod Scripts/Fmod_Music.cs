@@ -2,8 +2,9 @@ using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86;
 
-public class FmodMusic : MonoBehaviour
+public class Fmod_Music : MonoBehaviour
 {
 
     [Header("FMOD Settings")]
@@ -32,12 +33,22 @@ public class FmodMusic : MonoBehaviour
 
     public void updateStartedMusic(bool started)
     {
-        MusicEvent.setParameterByName(RaceStarted, started ? 0 : 1);
-        MusicEvent1.setParameterByName(RaceStarted, started ? 0 : 1);
+        MusicEvent.setParameterByName(RaceStarted, started ? 1 : 0);
+        MusicEvent1.setParameterByName(RaceStarted, started ? 1 : 0);
     }
 
     public void updateBoostMusic(int numBoost)
     {
-        MusicEvent.setParameterByName(BoostConcatenation, numBoost);
+        float aux;
+        MusicEvent.getParameterByName(BoostConcatenation,out aux);
+        int aux2 = (int)aux + numBoost;
+        MusicEvent.setParameterByName(BoostConcatenation, aux2);
+        Debug.Log(aux2);
+    }
+
+    public void resetBoostMusic()
+    {
+        MusicEvent.setParameterByName(BoostConcatenation, 0);
+
     }
 }

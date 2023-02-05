@@ -4887,6 +4887,9 @@ GameObject:
   - component: {fileID: 7735793012005152627}
   - component: {fileID: -1901742424261925298}
   - component: {fileID: 8942843894450744724}
+  - component: {fileID: 5562766152983686897}
+  - component: {fileID: 510660679754980291}
+  - component: {fileID: 7208031516237732320}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5074,6 +5077,81 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &5562766152983686897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735793012005152626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8eeb7bc3299074cb653ecfebff6938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MusicEventPath:
+    Guid:
+      Data1: -1056292856
+      Data2: 1269738299
+      Data3: -297373792
+      Data4: 1243396852
+    Path: event:/Music
+  MusicEffectsEventPath:
+    Guid:
+      Data1: -150812162
+      Data2: 1226122086
+      Data3: 338912162
+      Data4: 1372875496
+    Path: event:/MusicEffects
+  RaceStarted: RaceStarted
+  BoostConcatenation: BoostConcatened
+--- !u!114 &510660679754980291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735793012005152626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86a95d699208f44da748c9d7dcfff68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionEventPath:
+    Guid:
+      Data1: -53472462
+      Data2: 1270427935
+      Data3: -1598726512
+      Data4: -1635411213
+    Path: event:/Collision
+  CollisionType: CollysionType
+--- !u!114 &7208031516237732320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735793012005152626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b556bf0d906e7084588c1ddeb54ea9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnginePath:
+    Guid:
+      Data1: 917098932
+      Data2: 1277371443
+      Data3: -1289391215
+      Data4: -1794506109
+    Path: event:/Engine
+  Engine1Path:
+    Guid:
+      Data1: -1177616018
+      Data2: 1233990845
+      Data3: 543352227
+      Data4: 267432403
+    Path: event:/Engine 2
+  MotorIntensity: MotorIntensity
 --- !u!1 &7735793012016384531
 GameObject:
   m_ObjectHideFlags: 0

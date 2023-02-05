@@ -2,6 +2,7 @@ using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMOD.Studio;
 
 public class Fmod_Engine : MonoBehaviour
 {
@@ -30,9 +31,10 @@ public class Fmod_Engine : MonoBehaviour
         engineEvent1.release();
     }
 
-    public void updateBoostMusic(int motorIntensityValue)
+    public void updateBoostMusic(float motorIntensityValue)
     {
         engineEvent.setParameterByName(MotorIntensity, motorIntensityValue);
+        //RuntimeManager.StudioSystem.setParameterByName(MotorIntensity, motorIntensityValue);
         engineEvent1.setParameterByName(MotorIntensity, motorIntensityValue);
     }
 }
