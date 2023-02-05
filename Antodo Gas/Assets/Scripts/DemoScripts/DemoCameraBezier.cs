@@ -176,7 +176,7 @@ public class DemoCameraBezier : MonoBehaviour
 
         totalDistanceTraveled += distanceTravelled;
 
-        if (manejable && !stunned)
+        if (manejable && !stunned && timer <= 0 && started)
         {
             if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("Mouse ScrollWheel") > 0)) speed += aceleration * Time.deltaTime;
             if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("Mouse ScrollWheel") < 0)) speed -= deceleration * Time.deltaTime;
