@@ -13,24 +13,26 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        string gmText = GameManager.instance.createLobby(createInput.text);
+        //string gmText = GameManager.instance.createLobby(createInput.text);
 
-        textBox.text = gmText;
-        if (gmText == "Creating Lobby...")
-            PhotonNetwork.CreateRoom(createInput.text);
+        //textBox.text = gmText;
+        //if (gmText == "Creating Lobby...")
+        GameManager.instance.setHost();
+        PhotonNetwork.CreateRoom(createInput.text);
+
     }
 
     public void JoinRoom()
     {
-        string gmText = GameManager.instance.enterLobby(joinInput.text);
+        //string gmText = GameManager.instance.enterLobby(joinInput.text);
 
-        textBox.text = gmText;
-        if(gmText == "Connecting to lobby...")
+        //textBox.text = gmText;
+        //if(gmText == "Connecting to lobby...")
             PhotonNetwork.JoinRoom(joinInput.text);
     }
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("WaitingToPlay");
+        PhotonNetwork.LoadLevel("Game");
     }
 }
