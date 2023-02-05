@@ -147,7 +147,7 @@ public class DemoCameraBezier : MonoBehaviour
 
                     ////TODO esto de la rotation no esta workeando;
                     float sum = acumRot % 360;
-                    acumRot += (sum <=180)?180:-180;
+                    acumRot += (sum < 0)?180:-180;
                     //transform.Rotate(0, 0, acumRot);
                     //transform.position = transform.position + transform.up * (sampleToJump.scale.x);
                     //angulo, rotation
@@ -243,6 +243,12 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (view.IsMine && pathCreator != null)
         {
+
+            if (Mathf.Abs(acumRot) > 360)
+            {
+                acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
+            }
+
             CheckPathChange();
 
 
