@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
 using Photon.Pun;
+using static Unity.Burst.Intrinsics.X86;
+using System;
 
 public class DemoCameraBezier : MonoBehaviour
 {
     public PathCreator pathCreator;
     PathCreator jumpRoot;   //La raiz a la que puedo saltar
     public EndOfPathInstruction endOfPathInstruction;
-
+    [SerializeField]
+    GameObject spaceText;
     public float speed = 5;
     public float offset = 5;
     public float pinchoPunch = 200;
@@ -52,6 +55,10 @@ public class DemoCameraBezier : MonoBehaviour
 
     float totalDistanceTraveled; //Para controlar quien va primero en la carrera
 
+    Fmod_Music mus;
+    Fmod_Collisions cols;
+    Fmod_Engine eng;
+
     void Start()
     {
         if (pathCreator != null)
@@ -70,6 +77,67 @@ public class DemoCameraBezier : MonoBehaviour
         }
 
         if (!manejable) distanceTravelled = 50;
+
+        mus = GetComponent<Fmod_Music>();
+        cols = GetComponent<Fmod_Collisions>();
+        eng = GetComponent<Fmod_Engine>();
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M)) raceStart();
+        if (Input.GetKeyDown(KeyCode.P)) eng.playEngine();
+
+        if (view.IsMine && pathCreator != null)
+        {
+            //Debug
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                mus.updateBoostMusic(1);
+                //Debug.Log(mus.);
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                mus.updateBoostMusic(-1);
+            }
+
+            changeFOVSpeed();
+            eng.updateBoostMusic((speed * 1) / rebSpeed);
+
+            if (stunned) timeStunned += Time.deltaTime;
+
+            if (timeStunned >= stunTime)
+            {
+                stunned = false;
+                timeStunned = 0;
+            }
+        }
+
+        if (Mathf.Abs(acumRot) > 360)
+        {
+            acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
+        }
+
+        CheckPathChange();
+
+
+
+        changeFOVSpeed();
+        if (stunned) timeStunned += Time.deltaTime;
+
+        if (timeStunned >= stunTime)
+        {
+            stunned = false;
+            timeStunned = 0;
+        }
+        if (!lerping)
+            normalMove();
+        else
+        {
+            timerLerp += Time.deltaTime;
+            lerpingMove();
+            if (timerLerp >= cd_Lerp)
+                lerping = false;
+        }
     }
 
     void normalMove()
@@ -117,7 +185,7 @@ public class DemoCameraBezier : MonoBehaviour
             //Debug.Log(speed);
             speed -= deceleration * Time.deltaTime;
         }
-        else 
+        else
             levelBoost = 0;
     }
 
@@ -134,9 +202,11 @@ public class DemoCameraBezier : MonoBehaviour
         {
             if (raycast.collider.GetComponentInParent<PathCreator>() != null && raycast.collider.GetComponentInParent<PathCreator>() != pathCreator)
             {
+                spaceText.SetActive(true);
                 //punto de choque
                 if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
                 {
+                    spaceText.SetActive(false);
                     jumpRoot = raycast.collider.gameObject.GetComponentInParent<PathCreator>();
                     //objeto spline al que vas a cambiar
                     distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
@@ -159,6 +229,8 @@ public class DemoCameraBezier : MonoBehaviour
                     lerping = true;
                 }
             }
+            /*else
+                spaceText.SetActive(false);*/
         }
 
         //punto de choque del raycast
@@ -181,7 +253,7 @@ public class DemoCameraBezier : MonoBehaviour
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
                 new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
         }
-        
+
     }
 
     void lerpingMove()
@@ -240,39 +312,7 @@ public class DemoCameraBezier : MonoBehaviour
 
     }
 
-    void Update()
-    {
-        if (view.IsMine && pathCreator != null)
-        {
 
-            if (Mathf.Abs(acumRot) > 360)
-            {
-                acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
-            }
-
-            CheckPathChange();
-
-
-
-            changeFOVSpeed();
-            if (stunned) timeStunned += Time.deltaTime;
-
-            if (timeStunned >= stunTime)
-            {
-                stunned = false;
-                timeStunned = 0;
-            }
-            if (!lerping)
-                normalMove();
-            else
-            {
-                timerLerp += Time.deltaTime;
-                lerpingMove();
-                if (timerLerp >= cd_Lerp)
-                    lerping = false;
-            }
-        }
-    }
 
     // If the path changes during the game, update the distance travelled so that the follower's position on the new path
     // is as close as possible to its position on the old path
@@ -300,7 +340,9 @@ public class DemoCameraBezier : MonoBehaviour
                 speed = baseSpeed;
                 colision = true;
 
-                GetComponent<ParticleSystem>().Play();//Homer homer homer homer homer homer homer bart lisa homer marge homer otto homer homer otto homer
+                GetComponentInChildren<ParticleSystem>().Play();//Homer homer homer homer homer homer homer bart lisa homer marge homer otto homer homer otto homer
+                mus.resetBoostMusic();
+                cols.playCollision(1);
             }
 
             if (sal != null)
@@ -336,7 +378,10 @@ public class DemoCameraBezier : MonoBehaviour
             if (reb != null && !colision)
             {
                 speed = rebSpeed;
-                if(levelBoost<3)levelBoost++;
+                if (levelBoost < 3) levelBoost++;
+
+                mus.updateBoostMusic(1);
+                cols.playCollision(2);
             }
             else if (reb != null) colision = false;
 
@@ -357,6 +402,7 @@ public class DemoCameraBezier : MonoBehaviour
         {
             Debug.Log(acumulatedInput);
             Debug.Log(otherPlayer.acumulatedInput);
+            cols.playCollision(0);
 
             if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
             {
@@ -377,4 +423,10 @@ public class DemoCameraBezier : MonoBehaviour
     }
 
     public float getDistance() { return totalDistanceTraveled; } //Para que el gameManager los ordene en la carrera
+
+    public void raceStart()
+    {
+        mus.playMusic();
+        mus.updateStartedMusic(true);
+    }
 }
