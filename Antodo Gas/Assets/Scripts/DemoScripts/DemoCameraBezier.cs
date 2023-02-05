@@ -66,6 +66,7 @@ public class DemoCameraBezier : MonoBehaviour
     Fmod_Engine fmodEngineManager;
     Fmod_RootChange fmodRootChangeManager;
 
+    bool firstTime;
 
     void cameraStart()
     {
@@ -95,10 +96,12 @@ public class DemoCameraBezier : MonoBehaviour
         fmodEngineManager = GetComponent<Fmod_Engine>();
         fmodRootChangeManager = GetComponent<Fmod_RootChange>();
 
+
         normalMove(); //colcar al jugador y la camara en posicion
         cameraStart(); //adelantar la camara
         //detachear la camara
         cam.transform.parent = null;
+        firstTime = true;
     }
 
     void startButton()
@@ -122,12 +125,18 @@ public class DemoCameraBezier : MonoBehaviour
     }
     void Update()
     {
+        if (firstTime)
+        {
+            fmodMusicManager.playMusic();
+            firstTime = false;
+        }
         if (!view.IsMine)
             return;
 
         if (Input.GetKeyDown(KeyCode.M))
         {
             Debug.Log("Musica");
+            fmodMusicManager.playMusic();
             raceStart();
         }
         if (Input.GetKeyDown(KeyCode.P)) fmodEngineManager.playEngine();
@@ -441,7 +450,6 @@ public class DemoCameraBezier : MonoBehaviour
 
     public void raceStart()
     {
-        fmodMusicManager.playMusic();
         fmodMusicManager.updateStartedMusic(true);
     }
 }

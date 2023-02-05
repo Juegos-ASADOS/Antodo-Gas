@@ -2522,8 +2522,8 @@ GameObject:
   - component: {fileID: 995331898}
   - component: {fileID: 995331901}
   - component: {fileID: 995331902}
-  - component: {fileID: 995331903}
   - component: {fileID: 995331904}
+  - component: {fileID: 995331903}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2665,11 +2665,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -1056292856
-      Data2: 1269738299
-      Data3: -297373792
-      Data4: 1243396852
-    Path: event:/Music
+      Data1: -150812162
+      Data2: 1226122086
+      Data3: 338912162
+      Data4: 1372875496
+    Path: event:/MusicEffects
   Event: 
   PlayEvent: 1
   StopEvent: 2
@@ -2695,11 +2695,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -150812162
-      Data2: 1226122086
-      Data3: 338912162
-      Data4: 1372875496
-    Path: event:/MusicEffects
+      Data1: -1056292856
+      Data2: 1269738299
+      Data3: -297373792
+      Data4: 1243396852
+    Path: event:/Music
   Event: 
   PlayEvent: 1
   StopEvent: 2

@@ -30,6 +30,10 @@ public class Fmod_Music : MonoBehaviour
         MusicEvent.release();
         MusicEvent1.release();
     }
+    public void stopMusic() {
+        MusicEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        MusicEvent1.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
 
     public void updateStartedMusic(bool started)
     {
