@@ -295,15 +295,6 @@ public class DemoCameraBezier : MonoBehaviour
         transform.Rotate(0, 0, Mathf.Lerp(transform.rotation.z, acumRot, auxTime));
         transform.position = Vector3.Lerp(transform.position, final + transform.up * offset, auxTime);
 
-
-        if (Mathf.Abs(lateralAcceleration) > 0)
-        {
-            if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
-            else lateralAcceleration -= 0.1f;
-        }
-        else
-            lateralAcceleration = 0;
-
         if (speed > baseSpeed)
         {
             //Debug.Log(speed);
@@ -324,47 +315,23 @@ public class DemoCameraBezier : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         //Debug.Log("hay un trigger");
         if (view.IsMine)
         {
+            Debug.Log("Trigger");
             PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
-            Salida sal = other.GetComponent<Salida>();
 
-            Debug.Log("salto");
             if (pincho != null)
             {
-                if (pincho.derecha) lateralAcceleration = -pinchoPunch;
-                else lateralAcceleration = pinchoPunch;
+                if (pincho.derecha) lateralAcceleration -= pinchoPunch;
+                else lateralAcceleration += pinchoPunch;
 
                 speed = baseSpeed;
                 colision = true;
 
-                GetComponentInChildren<ParticleSystem>().Play();//Homer homer homer homer homer homer homer bart lisa homer marge homer otto homer homer otto homer
+                GetComponentInChildren<ParticleSystem>().Play();
                 mus.resetBoostMusic();
                 cols.playCollision(1);
-            }
-
-            if (sal != null)
-            {
-                Debug.Log("te obligo a asaltar");
-                //distanceTraveledBeforeExit = distanceTravelled;
-                jumpRoot = sal.GetComponentInParent<PathCreator>();
-
-
-                //a pelo pecho
-
-                //Debug.Log("saltado!");
-                //pathCreator = jumpRoot;
-                //OnPathChanged();
-                ////distanceTravelled = distanceTravelled - distanceTraveledBeforeExit;
-                //lerping = true;
-                //lerpStartTime = 1;
-
-                //jumpRoot = null;
-
-
-
             }
         }
     }
@@ -373,6 +340,7 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (view.IsMine)
         {
+            Debug.Log("Rebufo");
             rebufo reb = other.GetComponent<rebufo>();
 
             if (reb != null && !colision)
@@ -383,21 +351,17 @@ public class DemoCameraBezier : MonoBehaviour
                 mus.updateBoostMusic(1);
                 cols.playCollision(2);
             }
-            else if (reb != null) colision = false;
-
-            Salida sal = other.GetComponent<Salida>();
-            if (sal != null)
+            else if (reb != null)
             {
-                jumpRoot = null;
+                colision = false; 
             }
-
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
-
+        
         if (otherPlayer != null && !stunned)
         {
             Debug.Log(acumulatedInput);
