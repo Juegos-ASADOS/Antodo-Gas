@@ -97,6 +97,9 @@ public class DemoCameraBezier : MonoBehaviour
         cameraStart(); //adelantar la camara
         //detachear la camara
         cam.transform.parent = null;
+
+        //if (!GameManager.instance.isMultiplayer)
+            startButton();
     }
 
     void startButton()
@@ -132,8 +135,7 @@ public class DemoCameraBezier : MonoBehaviour
 
 
         //como no tengo boton pues con la x se hace el comienzo
-        if (Input.GetKeyDown(KeyCode.X) && !started)
-            startButton();
+        //if (Input.GetKeyDown(KeyCode.X) && !started)
 
         if (pathCreator != null)
         {
