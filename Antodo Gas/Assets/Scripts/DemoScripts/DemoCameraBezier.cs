@@ -180,8 +180,8 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (manejable && !stunned)
         {
-            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("ControllerTriggers") > 0)) speed += aceleration * Time.deltaTime;
-            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("ControllerTriggers") < 0)) speed -= deceleration * Time.deltaTime;
+            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("Mouse ScrollWheel") > 0)) speed += aceleration * Time.deltaTime;
+            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("Mouse ScrollWheel") < 0)) speed -= deceleration * Time.deltaTime;
 
             acumRot -= Input.GetAxis("Horizontal") * rotVirage * Time.deltaTime;
             acumulatedInput -= (int)Input.GetAxis("Horizontal");
