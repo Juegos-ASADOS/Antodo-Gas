@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     bool raceStarted = false;
 
     string currentLobby;
+
+    public bool isMultiplayer { get; set; }
     void Awake()
     {
         if (instance == null)
@@ -50,6 +52,12 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(name);
     }
+
+    public void setMultiplayer(bool state)
+    {
+        isMultiplayer = state;
+    }
+
     public string enterLobby(string key)
     {
         int numPlayers;
