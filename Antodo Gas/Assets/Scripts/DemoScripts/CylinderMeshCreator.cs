@@ -21,6 +21,7 @@ namespace PathCreation.Examples
 		MeshFilter meshFilter;
 		MeshRenderer meshRenderer;
 		Mesh mesh;
+		MeshCollider meshCollider;
 
 		protected override void PathUpdated()
 		{
@@ -111,9 +112,16 @@ namespace PathCreation.Examples
 			{
 				meshHolder.gameObject.AddComponent<MeshRenderer>();
 			}
+			if (!meshHolder.GetComponent<MeshCollider>())
+			{
+				meshHolder.gameObject.AddComponent<MeshCollider>();
+			}
 
 			meshRenderer = meshHolder.GetComponent<MeshRenderer>();
 			meshFilter = meshHolder.GetComponent<MeshFilter>();
+			meshCollider = meshHolder.GetComponent<MeshCollider>();
+			meshCollider.sharedMesh = mesh;
+
 			if (mesh == null)
 			{
 				mesh = new Mesh();

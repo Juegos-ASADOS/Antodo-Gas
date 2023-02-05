@@ -20,6 +20,9 @@ public class DemoCameraBezier : MonoBehaviour
     public float aceleration = 0.2f;
     public bool manejable = true;
     public float stunTime = 0.5f;
+    public float cd_Lerp = 0.5f;
+    float timerLerp = 0.0f;
+    public float rayCastRange = 8.0f;
 
     float distanceTravelled;
     float acumRot = 0;
@@ -94,16 +97,6 @@ public class DemoCameraBezier : MonoBehaviour
             }
 
             acumRot -= Input.GetAxis("Horizontal");
-
-            if (Input.GetKeyDown(KeyCode.Z) && jumpRoot != null && jumpRoot != pathCreator)
-            {
-                pathCreator = jumpRoot;
-                distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
-                lerping = true;
-                lerpStartTime = 1;
-                jumpRoot = null;
-            }
-
         }
 
         acumRot += lateralAcceleration;
@@ -127,9 +120,54 @@ public class DemoCameraBezier : MonoBehaviour
             levelBoost = 0;
     }
 
+
+    void CheckPathChange()
+    {
+        //raycast
+        RaycastHit raycast;
+        Ray ray = new Ray(transform.position, transform.up);
+        Debug.DrawLine(transform.position, transform.position + (transform.up * rayCastRange), Color.red);
+
+
+        if (Physics.Raycast(ray, out raycast, rayCastRange))
+        {
+            if (raycast.collider.GetComponentInParent<PathCreator>() != null && raycast.collider.GetComponentInParent<PathCreator>() != pathCreator)
+            {
+                //punto de choque
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    jumpRoot = raycast.collider.gameObject.GetComponentInParent<PathCreator>();
+                    //objeto spline al que vas a cambiar
+                    distanceTravelled = jumpRoot.path.GetClosestDistanceAlongPath(transform.position);
+                    pathCreator = jumpRoot;
+                    jumpRoot = null;
+
+                    //this.transform.position = sample.location;
+                    //this.transform.rotation = sample.Rotation;
+
+                    ////TODO esto de la rotation no esta workeando;
+                    float sum = acumRot % 360;
+                    acumRot += (sum <=180)?180:-180;
+                    //transform.Rotate(0, 0, acumRot);
+                    //transform.position = transform.position + transform.up * (sampleToJump.scale.x);
+                    //angulo, rotation
+                    //lo unico que tienes que hace re strasformar el vector up del player a la normal del choque del raycast
+
+                    //sampleToJump.location //centor de la curva
+                    timerLerp = 0;
+                    lerping = true;
+                }
+            }
+        }
+
+        //punto de choque del raycast
+
+
+
+    }
+
     void changeFOVSpeed()
     {
-        Debug.Log("LevelBoost: " + levelBoost);
         if (levelBoost > 0)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
@@ -147,7 +185,7 @@ public class DemoCameraBezier : MonoBehaviour
 
     void lerpingMove()
     {
-
+        Debug.Log("Lerping...");
         distanceTravelled += speed * Time.deltaTime;
         Vector3 final = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
         Quaternion finRot = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
@@ -163,21 +201,28 @@ public class DemoCameraBezier : MonoBehaviour
             lateralAcceleration = 0;
 
 
-        GameObject aux = new GameObject();
-        aux.transform.position = final;
-        aux.transform.rotation = finRot;
+        //GameObject aux = new GameObject();
+        //aux.transform.position = final;
+        //aux.transform.rotation = finRot;
 
 
         //Debug.Log(acumRot);
         acumRot += lateralAcceleration;
-        aux.transform.Rotate(0, 0, acumRot);
-        //transform.Rotate(0, 0, acumRot);
-        transform.position = Vector3.Lerp(transform.position, aux.transform.position + aux.transform.up * offset, (1 - lerpStartTime));
-        transform.rotation = Quaternion.Lerp(transform.rotation, aux.transform.rotation, (1 - lerpStartTime));
-        //transform.position + transform.up * offset;
+        //aux.transform.Rotate(0, 0, acumRot);
+        ////transform.Rotate(0, 0, acumRot);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, aux.transform.rotation, timerLerp/cd_Lerp);
+        //transform.position = Vector3.Lerp(transform.position, aux.transform.position + aux.transform.up * offset, timerLerp / cd_Lerp);
+        ////transform.position + transform.up * offset;
+
+        float auxTime = timerLerp / cd_Lerp;
+
+        auxTime = (auxTime > 1) ? 1 : auxTime;
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, finRot, auxTime);
+        transform.Rotate(0, 0, Mathf.Lerp(transform.rotation.z, acumRot, auxTime));
+        transform.position = Vector3.Lerp(transform.position, final + transform.up * offset, auxTime);
 
 
-        Destroy(aux);
         if (Mathf.Abs(lateralAcceleration) > 0)
         {
             if (lateralAcceleration < 0) lateralAcceleration += 0.1f;
@@ -192,26 +237,13 @@ public class DemoCameraBezier : MonoBehaviour
             speed -= deceleration;
         }
 
-        if (lerpStartTime <= 0)
-        {
-            lerping = false;
-        }
-        else
-        {
-            lerpStartTime -= Time.deltaTime;
-        }
-
     }
 
     void Update()
     {
         if (view.IsMine && pathCreator != null)
         {
-
-            if (!lerping)
-                normalMove();
-            else
-                lerpingMove();
+            CheckPathChange();
 
 
 
@@ -222,6 +254,15 @@ public class DemoCameraBezier : MonoBehaviour
             {
                 stunned = false;
                 timeStunned = 0;
+            }
+            if (!lerping)
+                normalMove();
+            else
+            {
+                timerLerp += Time.deltaTime;
+                lerpingMove();
+                if (timerLerp >= cd_Lerp)
+                    lerping = false;
             }
         }
     }
@@ -251,6 +292,8 @@ public class DemoCameraBezier : MonoBehaviour
 
                 speed = baseSpeed;
                 colision = true;
+
+                GetComponent<ParticleSystem>().Play();//Homer homer homer homer homer homer homer bart lisa homer marge homer otto homer homer otto homer
             }
 
             if (sal != null)
@@ -285,7 +328,6 @@ public class DemoCameraBezier : MonoBehaviour
 
             if (reb != null && !colision)
             {
-                Debug.Log("bufo");
                 speed = rebSpeed;
                 if(levelBoost<3)levelBoost++;
             }
