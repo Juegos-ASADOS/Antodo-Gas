@@ -5275,6 +5275,7 @@ GameObject:
   - component: {fileID: 5562766152983686897}
   - component: {fileID: 510660679754980291}
   - component: {fileID: 7208031516237732320}
+  - component: {fileID: 1473429239684009451}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5549,14 +5550,26 @@ MonoBehaviour:
       Data3: -1289391215
       Data4: -1794506109
     Path: event:/Engine
-  Engine1Path:
-    Guid:
-      Data1: -1177616018
-      Data2: 1233990845
-      Data3: 543352227
-      Data4: 267432403
-    Path: event:/Engine 2
   MotorIntensity: MotorIntensity
+--- !u!114 &1473429239684009451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735793012005152626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f8977cd620e7854695268e1d000cbd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChangeRootPath:
+    Guid:
+      Data1: 1353338408
+      Data2: 1138950257
+      Data3: -2068836191
+      Data4: -316350145
+    Path: event:/RootChange
 --- !u!1 &7735793012016384531
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,10 +9,14 @@ public class Meta : MonoBehaviour
     GameManager gm;
     [SerializeField]
     GameObject finalText;
+
+    Fmod_EndRace fmodEndRaceManager;
+
     // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.instance;
+        fmodEndRaceManager = GetComponent<Fmod_EndRace>();
     }
 
     // Update is called once per frame
@@ -23,14 +27,25 @@ public class Meta : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         numPlayersFinished++;
-        if (other.transform.GetChild(0).gameObject.activeSelf){
+        if (other.transform.GetChild(0).gameObject.activeSelf)
+        {
             string text = "Winner";
             if (numPlayersFinished != 1)
                 text = numPlayersFinished.ToString() + "º posición";
             finalText.GetComponent<TextMeshProUGUI>().SetText(text);
             finalText.SetActive(true);
+
+            fmodEndRaceManager.playmetaSound();
         }
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName("RaceEnded", 1);
+        fmodEndRaceManager.endRaceSound();
+
         if (numPlayersFinished >= gm.getNumPlayersInCurrentLobby())
+        {
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("RaceEnded", 0);
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("RaceEnded", 0);
             GameManager.changeScene("EndGame");
+        }
+
     }
 }
