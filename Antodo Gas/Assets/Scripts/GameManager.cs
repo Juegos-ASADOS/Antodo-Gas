@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     Dictionary<string, int> playersInLobby = new Dictionary<string, int>();
 
     bool host = false;
+    bool raceStarted = false;
 
     string currentLobby;
     void Awake()
@@ -26,13 +27,21 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    public void setHost()
+    public void setHost(bool t)
     {
-        host = true;
-    }  
+        host = t;
+    }
     public bool getHost()
     {
         return host; 
+    }
+    public void setRaceStarted(bool t)
+    {
+        raceStarted = t;
+    }
+    public bool getRaceStarted()
+    {
+        return raceStarted;
     }
     public static void changeScene(string name)
     {
