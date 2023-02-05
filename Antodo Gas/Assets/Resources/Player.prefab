@@ -26,9 +26,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7427330783477273827}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 1.508}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7735793012005152632}
   m_RootOrder: 2
@@ -56,7 +56,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.001
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -286,7 +286,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.3
-      minScalar: 0.1
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -748,7 +748,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1
+      value: 0.1
       mode: 0
       spread: 0
       speed:
@@ -977,7 +977,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 15
+        scalar: 25
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -4976,7 +4976,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7735793012005152636
 Rigidbody:
@@ -5010,7 +5010,7 @@ MonoBehaviour:
   endOfPathInstruction: 2
   spaceText: {fileID: 0}
   speed: 8
-  offset: 5
+  offset: 4
   pinchoPunch: 5
   acelSpeed: 15
   baseSpeed: 5
@@ -5182,8 +5182,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7735793012016384531}
-  m_LocalRotation: {x: 0.046234757, y: 0, z: 0, w: 0.99893063}
-  m_LocalPosition: {x: 0, y: 0.34, z: -0.48}
+  m_LocalRotation: {x: 0.09583428, y: -0, z: -0, w: 0.9953973}
+  m_LocalPosition: {x: 0, y: 0.32, z: -0.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5293,18 +5293,6 @@ PrefabInstance:
     - target: {fileID: 7858152432841454767, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858152432841454767, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858152432841454767, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858152432841454767, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 7858152432841454767, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
       propertyPath: m_LocalPosition.x

@@ -29,7 +29,7 @@ public class DemoCameraBezier : MonoBehaviour
 
     float distanceTravelled;
     float acumRot = 0;
-    float rotVirage = 30;
+    public float rotVirage = 40;
     float lateralAcceleration = 0;
 
 
@@ -119,8 +119,6 @@ public class DemoCameraBezier : MonoBehaviour
 
         CheckPathChange();
 
-
-
         changeFOVSpeed();
         if (stunned) timeStunned += Time.deltaTime;
 
@@ -151,8 +149,8 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (manejable && !stunned)
         {
-            if (speed < acelSpeed && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0)) speed += aceleration * Time.deltaTime;
-            if (speed > baseSpeed && Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1)) speed -= deceleration * Time.deltaTime;
+            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0))) speed += aceleration * Time.deltaTime;
+            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1))) speed -= deceleration * Time.deltaTime;
 
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
@@ -166,9 +164,10 @@ public class DemoCameraBezier : MonoBehaviour
             }
 
             acumRot -= Input.GetAxis("Horizontal") * rotVirage * Time.deltaTime;
+            acumulatedInput -= (int)Input.GetAxis("Horizontal");
         }
 
-        acumRot += lateralAcceleration * Time.deltaTime;
+        acumRot += lateralAcceleration;
         transform.Rotate(0, 0, acumRot);
         transform.position = transform.position + transform.up * offset;
 
@@ -280,7 +279,7 @@ public class DemoCameraBezier : MonoBehaviour
 
 
         //Debug.Log(acumRot);
-        acumRot += lateralAcceleration * Time.deltaTime;
+        acumRot += lateralAcceleration;
         //aux.transform.Rotate(0, 0, acumRot);
         ////transform.Rotate(0, 0, acumRot);
         //transform.rotation = Quaternion.Lerp(transform.rotation, aux.transform.rotation, timerLerp/cd_Lerp);
@@ -321,7 +320,7 @@ public class DemoCameraBezier : MonoBehaviour
             Debug.Log("Trigger");
             PinchoTrigger pincho = other.GetComponent<PinchoTrigger>();
 
-            if (pincho != null)
+            if (pincho != null && !colision)
             {
                 if (pincho.derecha) lateralAcceleration -= pinchoPunch;
                 else lateralAcceleration += pinchoPunch;
