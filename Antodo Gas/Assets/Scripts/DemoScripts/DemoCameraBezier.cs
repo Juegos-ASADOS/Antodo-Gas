@@ -28,6 +28,7 @@ public class DemoCameraBezier : MonoBehaviour
     public float rayCastRange = 8.0f;
     public float timeAfterChange = 2.0f;
     float changeTimer = float.MaxValue;
+    public bool started = false;
 
     float distanceTravelled;
     float acumRot = 0;
@@ -55,6 +56,8 @@ public class DemoCameraBezier : MonoBehaviour
     int levelBoost;
     float baseCamerapos;
     public float offSetCamera;
+    float timer = 0;
+    float timerBOST = 0;
 
     float totalDistanceTraveled; //Para controlar quien va primero en la carrera
 
@@ -62,6 +65,11 @@ public class DemoCameraBezier : MonoBehaviour
     Fmod_Collisions cols;
     Fmod_Engine eng;
 
+
+    void cameraStart()
+    {
+        cam.transform.position = cam.transform.position + transform.forward * 2;
+    }
     void Start()
     {
         if (pathCreator != null)
@@ -84,7 +92,24 @@ public class DemoCameraBezier : MonoBehaviour
         mus = GetComponent<Fmod_Music>();
         cols = GetComponent<Fmod_Collisions>();
         eng = GetComponent<Fmod_Engine>();
+
+        normalMove(); //colcar al jugador y la camara en posicion
+        cameraStart(); //adelantar la camara
+        //detachear la camara
+        cam.transform.parent = null;
     }
+
+    void startButton()
+    {
+        //comineza la cuneta atras, 2 segundos voy a decir.
+        //cunado pasen los dos segundos la camara hacer el lerpeo a la posicion del jugador a la velocidad que tenga quedara guapo trusteen
+        timer = 0.5f;
+        timerBOST = 1.0f;
+        levelBoost = 3;
+        speed = baseSpeed;
+        started = true;
+    }
+
     public void setVel()
     {
         speed = baseSpeed;
@@ -106,22 +131,22 @@ public class DemoCameraBezier : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P)) eng.playEngine();
 
 
+        //como no tengo boton pues con la x se hace el comienzo
+        if (Input.GetKeyDown(KeyCode.X) && !started)
+            startButton();
+
         if (pathCreator != null)
         {
-            //Debug
-            if (Input.GetKeyDown(KeyCode.B))
+
+            if (Mathf.Abs(acumRot) > 360)
             {
-                mus.updateBoostMusic(1);
-                //Debug.Log(mus.);
-            }
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                mus.updateBoostMusic(-1);
+                acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
             }
 
-            changeFOVSpeed();
+            CheckPathChange();
             eng.updateBoostMusic((speed * 1) / rebSpeed);
 
+            changeFOVSpeed();
             if (stunned) timeStunned += Time.deltaTime;
 
             if (timeStunned >= stunTime)
@@ -129,32 +154,17 @@ public class DemoCameraBezier : MonoBehaviour
                 stunned = false;
                 timeStunned = 0;
             }
+            if (!lerping)
+                normalMove();
+            else
+            {
+                timerLerp += Time.deltaTime;
+                lerpingMove();
+                if (timerLerp >= cd_Lerp)
+                    lerping = false;
+            }
         }
 
-        if (Mathf.Abs(acumRot) > 360)
-        {
-            acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
-        }
-
-        CheckPathChange();
-
-        changeFOVSpeed();
-        if (stunned) timeStunned += Time.deltaTime;
-
-        if (timeStunned >= stunTime)
-        {
-            stunned = false;
-            timeStunned = 0;
-        }
-        if (!lerping)
-            normalMove();
-        else
-        {
-            timerLerp += Time.deltaTime;
-            lerpingMove();
-            if (timerLerp >= cd_Lerp)
-                lerping = false;
-        }
     }
 
     void normalMove()
@@ -168,19 +178,8 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (manejable && !stunned)
         {
-            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.JoystickButton0))) speed += aceleration * Time.deltaTime;
-            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.JoystickButton1))) speed -= deceleration * Time.deltaTime;
-
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                acumRot += rotVirage * Time.deltaTime;
-                acumulatedInput++;
-            }
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            {
-                acumRot -= rotVirage * Time.deltaTime;
-                acumulatedInput--;
-            }
+            if (speed < acelSpeed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("ControllerTriggers")>0)) speed += aceleration * Time.deltaTime;
+            if (speed > baseSpeed && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("ControllerTriggers") < 0)) speed -= deceleration * Time.deltaTime;
 
             acumRot -= Input.GetAxis("Horizontal") * rotVirage * Time.deltaTime;
             acumulatedInput -= (int)Input.GetAxis("Horizontal");
@@ -198,13 +197,14 @@ public class DemoCameraBezier : MonoBehaviour
         else
             lateralAcceleration = 0;
 
-        if (speed > baseSpeed)
+        if ( speed > acelSpeed)
         {
             //Debug.Log(speed);
             speed -= deceleration * Time.deltaTime;
         }
         else
-            levelBoost = 0;
+            if (timerBOST <= 0)
+                levelBoost = 0;
     }
 
 
@@ -231,7 +231,7 @@ public class DemoCameraBezier : MonoBehaviour
             {
                 spaceText.SetActive(true);
                 //punto de choque
-                if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
+                if (!lerping && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button0)))
                 {
                     spaceText.SetActive(false);
                     jumpRoot = raycast.collider.gameObject.GetComponentInParent<PathCreator>();
@@ -271,6 +271,7 @@ public class DemoCameraBezier : MonoBehaviour
 
     void changeFOVSpeed()
     {
+        if (started && timer <= 0)
         if (levelBoost > 0)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV+fovAcelSpeed + fovSpeedBoost * levelBoost, 3f * Time.deltaTime);
@@ -284,6 +285,20 @@ public class DemoCameraBezier : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, currentFov, 5f * Time.deltaTime);
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
                 new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
+        }
+        else if (timer >= 0)
+        {
+            timer -= Time.deltaTime;
+        }
+
+        if (timerBOST >= 0)
+        {
+            timerBOST -= Time.deltaTime;
+        }
+
+        if (timer <= 0 && started)
+        {
+            cam.transform.parent = this.transform;
         }
 
     }

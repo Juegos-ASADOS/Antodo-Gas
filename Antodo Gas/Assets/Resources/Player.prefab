@@ -5410,19 +5410,22 @@ MonoBehaviour:
   offset: 4
   pinchoPunch: 5
   acelSpeed: 15
-  baseSpeed: 5
+  baseSpeed: 8
   rebSpeed: 25
-  deceleration: 0.3
-  aceleration: 2
+  deceleration: 1.5
+  aceleration: 4
   manejable: 1
   stunTime: 0.5
   cd_Lerp: 0.5
   rayCastRange: 8
-  rotVirage: 40
+  timeAfterChange: 2
+  started: 0
+  rotVirage: 60
   acumulatedInput: 0
   cam: {fileID: 7735793012016384541}
-  fovSpeed: 20
-  offSetCamera: 0
+  fovAcelSpeed: 30
+  fovSpeedBoost: 12
+  offSetCamera: 0.08
 --- !u!114 &-1901742424261925298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5731,6 +5734,18 @@ PrefabInstance:
     - target: {fileID: 7858152432841454767, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.207
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712145588633206489, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.0043712417
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712145588633206489, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.0043712417
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712145588633206489, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.0043712417
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f0669e4da6e5bd4ab63db45a0920124, type: 3}
