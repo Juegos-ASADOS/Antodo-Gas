@@ -47,7 +47,8 @@ public class DemoCameraBezier : MonoBehaviour
     //Camera Fov
     public Camera cam;
     float baseFOV;
-    public float fovSpeed = 20.0f;
+    public float fovAcelSpeed = 30.0f;
+    public float fovSpeedBoost = 20.0f;
     private float targetFov;
     int levelBoost;
     float baseCamerapos;
@@ -254,13 +255,15 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (levelBoost > 0)
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV + fovSpeed * levelBoost, 3f * Time.deltaTime);
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV+fovAcelSpeed + fovSpeedBoost * levelBoost, 3f * Time.deltaTime);
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
                 new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos + offSetCamera * -levelBoost), 3f * Time.deltaTime);
         }
         else
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, baseFOV, 2f * Time.deltaTime);
+            float currentFov = baseFOV + (speed - baseSpeed) * (fovAcelSpeed / (acelSpeed - baseSpeed));
+            if (currentFov < baseFOV) currentFov = baseFOV;
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, currentFov, 5f * Time.deltaTime);
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition,
                 new Vector3(cam.transform.localPosition.x, cam.transform.localPosition.y, baseCamerapos), 2f * Time.deltaTime);
         }
