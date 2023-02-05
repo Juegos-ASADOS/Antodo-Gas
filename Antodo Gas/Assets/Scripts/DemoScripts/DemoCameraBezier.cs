@@ -95,8 +95,12 @@ public class DemoCameraBezier : MonoBehaviour
     {
         if (!view.IsMine)
             return;
-        
-        if (Input.GetKeyDown(KeyCode.M)) raceStart();
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Debug.Log("Musica");
+            raceStart();
+        }
         if (Input.GetKeyDown(KeyCode.P)) eng.playEngine();
 
         
