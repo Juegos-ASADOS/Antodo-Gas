@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{e3f0314b-8676-4977-971c-c18cef334023}">
 		<property name="assetPath">
-			<value>Cambio_raiz.wav</value>
+			<value>SoundAssets/Car/Cambio_raiz.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

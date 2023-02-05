@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{7a459f80-d35b-4e61-898a-0bc9c0d1e49d}">
 		<property name="assetPath">
-			<value>boost_2.0.wav</value>
+			<value>SoundAssets/Crash/boost_2.0.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
