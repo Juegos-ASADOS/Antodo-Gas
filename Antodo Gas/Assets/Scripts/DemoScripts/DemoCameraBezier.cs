@@ -13,7 +13,7 @@ public class DemoCameraBezier : MonoBehaviour
     public EndOfPathInstruction endOfPathInstruction;
     [SerializeField]
     GameObject spaceText;
-    public float speed = 5;
+    float speed = 0.0f;
     public float offset = 5;
     public float pinchoPunch = 200;
     public float acelSpeed = 15;
@@ -82,12 +82,24 @@ public class DemoCameraBezier : MonoBehaviour
         cols = GetComponent<Fmod_Collisions>();
         eng = GetComponent<Fmod_Engine>();
     }
+    public void setVel()
+    {
+        speed = baseSpeed;
+    }
+    public float getVel()
+    {
+        return speed;
+    }
     void Update()
     {
+        if (!view.IsMine)
+            return;
+        
         if (Input.GetKeyDown(KeyCode.M)) raceStart();
         if (Input.GetKeyDown(KeyCode.P)) eng.playEngine();
 
-        if (view.IsMine && pathCreator != null)
+        
+        if(pathCreator != null)
         {
             //Debug
             if (Input.GetKeyDown(KeyCode.B))
@@ -359,30 +371,30 @@ public class DemoCameraBezier : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
+        //DemoCameraBezier otherPlayer = collision.gameObject.GetComponent<DemoCameraBezier>();
         
-        if (otherPlayer != null && !stunned)
-        {
-            Debug.Log(acumulatedInput);
-            Debug.Log(otherPlayer.acumulatedInput);
-            cols.playCollision(0);
+        //if (otherPlayer != null && !stunned)
+        //{
+        //    Debug.Log(acumulatedInput);
+        //    Debug.Log(otherPlayer.acumulatedInput);
+        //    cols.playCollision(0);
 
-            if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
-            {
-                if (acumulatedInput > 0) lateralAcceleration -= 3;
-                else lateralAcceleration += 3;
+        //    if (Mathf.Abs(acumulatedInput) > Mathf.Abs(otherPlayer.acumulatedInput))
+        //    {
+        //        if (acumulatedInput > 0) lateralAcceleration -= 3;
+        //        else lateralAcceleration += 3;
 
-            }
-            else
-            {
-                if (acumulatedInput > 0) lateralAcceleration -= 10;
-                else lateralAcceleration += 10;
+        //    }
+        //    else
+        //    {
+        //        if (acumulatedInput > 0) lateralAcceleration -= 10;
+        //        else lateralAcceleration += 10;
 
-                stunned = true;
-            }
+        //        stunned = true;
+        //    }
 
 
-        }
+        //}
     }
 
     public float getDistance() { return totalDistanceTraveled; } //Para que el gameManager los ordene en la carrera
