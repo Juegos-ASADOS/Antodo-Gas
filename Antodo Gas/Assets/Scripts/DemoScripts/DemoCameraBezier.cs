@@ -108,20 +108,16 @@ public class DemoCameraBezier : MonoBehaviour
 
         if (pathCreator != null)
         {
-            //Debug
-            if (Input.GetKeyDown(KeyCode.B))
+
+            if (Mathf.Abs(acumRot) > 360)
             {
-                mus.updateBoostMusic(1);
-                //Debug.Log(mus.);
-            }
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                mus.updateBoostMusic(-1);
+                acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
             }
 
-            changeFOVSpeed();
+            CheckPathChange();
             eng.updateBoostMusic((speed * 1) / rebSpeed);
 
+            changeFOVSpeed();
             if (stunned) timeStunned += Time.deltaTime;
 
             if (timeStunned >= stunTime)
@@ -129,32 +125,17 @@ public class DemoCameraBezier : MonoBehaviour
                 stunned = false;
                 timeStunned = 0;
             }
+            if (!lerping)
+                normalMove();
+            else
+            {
+                timerLerp += Time.deltaTime;
+                lerpingMove();
+                if (timerLerp >= cd_Lerp)
+                    lerping = false;
+            }
         }
 
-        if (Mathf.Abs(acumRot) > 360)
-        {
-            acumRot = (Mathf.Abs(acumRot) % 360) * ((acumRot > 0) ? 1.0f : -1.0f);
-        }
-
-        CheckPathChange();
-
-        changeFOVSpeed();
-        if (stunned) timeStunned += Time.deltaTime;
-
-        if (timeStunned >= stunTime)
-        {
-            stunned = false;
-            timeStunned = 0;
-        }
-        if (!lerping)
-            normalMove();
-        else
-        {
-            timerLerp += Time.deltaTime;
-            lerpingMove();
-            if (timerLerp >= cd_Lerp)
-                lerping = false;
-        }
     }
 
     void normalMove()
