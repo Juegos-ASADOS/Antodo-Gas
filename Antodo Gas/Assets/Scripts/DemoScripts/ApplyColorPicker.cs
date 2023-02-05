@@ -5,19 +5,23 @@ using UnityEngine;
 public class ApplyColorPicker : MonoBehaviour
 {
     public FlexibleColorPicker fcp;
-    public Material[] materials;
+    public Material material;
+    public Renderer[] gameObjects;
+
+    private Material materialCopy;
 
     private void Start()
     {
-        
+        materialCopy = new Material(material);
     }
 
     // Update is called once per frame
     void Update()
     {
-        for(int i = 0; i < materials.Length; i++)
+        materialCopy.SetColor("_BaseColor", fcp.color);
+        for(int i = 0; i < gameObjects.Length; i++)
         {
-            materials[i].SetColor("_BaseColor", fcp.color);
+            gameObjects[i].material = materialCopy;
         }
     }
 }

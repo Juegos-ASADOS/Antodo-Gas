@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!137 &185770040 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8293800685069251231, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
+  m_PrefabInstance: {fileID: 728060296}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &386224975
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,8 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fcp: {fileID: 1260878204}
-  materials:
-  - {fileID: 2100000, guid: fd03be7bd2523964190ad98ec49295bd, type: 2}
+  material: {fileID: 2100000, guid: fd03be7bd2523964190ad98ec49295bd, type: 2}
+  gameObjects:
+  - {fileID: 185770040}
+  - {fileID: 1519474661}
 --- !u!1 &566478121
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,6 +441,10 @@ PrefabInstance:
       value: 2.6
       objectReference: {fileID: 0}
     - target: {fileID: 7735793012005152627, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7735793012005152627, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
       propertyPath: pathCreator
       value: 
       objectReference: {fileID: 1931781081}
@@ -680,6 +691,11 @@ MonoBehaviour:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2130943084915617137, guid: 4214b57e615806c448ba9d993d629531, type: 3}
   m_PrefabInstance: {fileID: 1260878203}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1519474661 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1008620239166081027, guid: 32e3b452b1686814f80353f949d85bb2, type: 3}
+  m_PrefabInstance: {fileID: 728060296}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1669999235
 GameObject:
